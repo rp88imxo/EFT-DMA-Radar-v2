@@ -874,7 +874,7 @@ namespace eft_dma_radar
 
                 if (allPlayers is not null)
                 {
-                    var friendlies = allPlayers?.Where(x => x.IsFriendlyActive);
+                    var friendlies = allPlayers.ToList().Where(x => x.IsFriendlyActive);
                     var localPlayerPos = localPlayer.Position;
                     var localPlayerMapPos = localPlayerPos.ToMapPos(_selectedMap);
                     var mouseOverGroup = _mouseOverGroup;
@@ -1359,15 +1359,16 @@ namespace eft_dma_radar
 
             // Draw loot objects
             // requires rework for height difference
-            //var loot = this.Loot; // cache ref
-            //if (loot is not null && loot.Filter is not null)
-            //{
-            //    foreach (var item in loot.Filter)
-            //    {
-            //        if (ShouldDrawLootObject(myPosition, item.Position, _config.MaxDistance))
-            //            DrawLootableObject(canvas, drawingLocation, myPosition, sourcePlayer.ZoomedPosition, item, normalizedDirection, pitch);
-            //    }
-            //}
+
+            var loot = this.Loot; // cache ref
+            if (loot is not null && loot.Filter is not null)
+            {
+                foreach (var item in loot.Filter)
+                {
+                    if (ShouldDrawLootObject(myPosition, item.Position, _config.MaxDistance))
+                        DrawLootableObject(canvas, drawingLocation, myPosition, sourcePlayer.ZoomedPosition, item, normalizedDirection, pitch);
+                }
+            }
         }
 
         private float NormalizeDirection(float direction)
