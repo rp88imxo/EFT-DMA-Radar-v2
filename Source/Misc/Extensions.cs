@@ -80,9 +80,9 @@ namespace eft_dma_radar
         /// <summary>
         /// Ghetto helper method to get the Color from a PaintColor object by Key & return a new SKColor object based on it
         /// </summary>
-        public static SKColor SKColorFromPaintColor(string key) {
+        public static SKColor SKColorFromPaintColor(string key, byte alpha=0) {
             var col = Program.Config.PaintColors[key];
-            return new SKColor(col.R, col.G, col.B, col.A);
+            return new SKColor(col.R, col.G, col.B, alpha != 0 ? alpha : col.A);
         }
 
         /// <summary>
@@ -393,17 +393,12 @@ namespace eft_dma_radar
         /// </summary>
         public static SKPaint GetPaint(this ExfilStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case ExfilStatus.Open:
-                    return SKPaints.PaintExfilOpen;
-                case ExfilStatus.Pending:
-                    return SKPaints.PaintExfilPending;
-                case ExfilStatus.Closed:
-                    return SKPaints.PaintExfilClosed;
-                default:
-                    return SKPaints.PaintExfilClosed;
-            }
+                ExfilStatus.Open => SKPaints.PaintExfilOpen,
+                ExfilStatus.Pending => SKPaints.PaintExfilPending,
+                _ => SKPaints.PaintExfilClosed
+            };
         }
         #endregion
     }

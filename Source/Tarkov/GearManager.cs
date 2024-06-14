@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Numerics;
 
 namespace eft_dma_radar
 {
@@ -6,19 +7,26 @@ namespace eft_dma_radar
     {
         private static readonly ConcurrentBag<string> slotsToSkip = new ConcurrentBag<string> { "SecuredContainer", "Dogtag", "Compass", "Eyewear", "ArmBand" };
         private static readonly ConcurrentBag<string> thermalIDs = new ConcurrentBag<string> { "5a1eaa87fcdbcb001865f75e", "5d1b5e94d7ad1a2b865a96b0", "63fc44e2429a8a166c7f61e6", "6478641c19d732620e045e17", "63fc44e2429a8a166c7f61e6" };
-        /// <summary>
-        /// List of equipped items in PMC Inventory Slots.
-        /// </summary>
+
+        public static string GetGearSlotName(string key) => key switch
+        {
+            "Headwear" => "Head",
+            "FaceCover" => "Face",
+            "ArmorVest" => "Armor",
+            "TacticalVest" => "Vest",
+            "Backpack" => "Backpack",
+            "FirstPrimaryWeapon" => "Primary",
+            "SecondPrimaryWeapon" => "Secondary",
+            "Holster" => "Holster",
+            "Scabbard" => "Sheath",
+            "Earpiece" => "Earpiece",
+            _ => "n/a"
+        };
+
         public ConcurrentDictionary<string, GearItem> Gear { get; set; }
 
-        /// <summary>
-        /// Total value of all equipped items.
-        /// </summary>
         public int Value { get; set; }
 
-        /// <summary>
-        /// All gear items and mods.
-        /// </summary>
         public ConcurrentBag<LootItem> GearItemMods { get; set; }
 
         public GearManager(ulong slots)
@@ -92,7 +100,8 @@ namespace eft_dma_radar
                                 Long = longName,
                                 Short = shortName,
                                 Value = totalGearValue,
-                                HasThermal = hasThermal
+                                HasThermal = hasThermal,
+                                Item = lootItem
                             };
 
                             gearDict.TryAdd(slotNames[i], gear);
@@ -212,9 +221,7 @@ namespace eft_dma_radar
                 var size = Memory.ReadValue<int>(slotItemBase + Offsets.UnityList.Count);
 
                 if (size < 1 || size > 25)
-                {
                     size = Math.Clamp(size, 0, 25);
-                }
 
                 var scatterReadMap = new ScatterReadMap(size);
                 var round1 = scatterReadMap.AddRound();
@@ -244,9 +251,7 @@ namespace eft_dma_radar
                             var name = Memory.ReadUnityString(namePtr);
 
                             if (!GearManager.slotsToSkip.Contains(name, StringComparer.OrdinalIgnoreCase))
-                            {
                                 slotDict[name] = slotPtr;
-                            }
                         }
                         catch { return; }
                     });

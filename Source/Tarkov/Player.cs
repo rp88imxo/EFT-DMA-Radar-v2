@@ -50,10 +50,6 @@ namespace eft_dma_radar
         /// </summary>
         public int Lvl { get; } = 0;
         /// <summary>
-        /// MemberCategory of Player Account (Developer,Sherpa,etc.) null if ordinary account/eod.
-        /// </summary>
-        public string Category { get; }
-        /// <summary>
         /// Player's Kill/Death Average
         /// </summary>
         public float KDA { get; private set; } = -1f;
@@ -214,6 +210,19 @@ namespace eft_dma_radar
                 this.Type is PlayerType.Rogue ||
                 this.Type is PlayerType.Cultist || 
                 this.Type is PlayerType.Boss);
+        }
+
+        /// <summary>
+        /// Player is rogue, raider etc.
+        /// </summary>
+        public bool IsRogueRaider
+        {
+            get => (
+                this.Type is PlayerType.Raider ||
+                this.Type is PlayerType.BossFollower ||
+                this.Type is PlayerType.BossGuard ||
+                this.Type is PlayerType.Rogue ||
+                this.Type is PlayerType.Cultist);
         }
         /// <summary>
         /// Player is AI/human-controlled and Active/Alive.
@@ -598,9 +607,7 @@ namespace eft_dma_radar
                 this.IsPMC = !isAI;
 
                 if (isAI)
-                {
                     this.Name = Helpers.TransliterateCyrillic(this.Name);
-                }
 
                 this.Type = this.GetOfflinePlayerType(isAI, this.Name);
 
@@ -648,9 +655,7 @@ namespace eft_dma_radar
                 this.IsPMC = (playerSide == 1 || playerSide == 2);
 
                 if (!this.IsPMC)
-                {
                     this.Name = Helpers.TransliterateCyrillic(this.Name);
-                }
             }
             else
             {
@@ -689,7 +694,7 @@ namespace eft_dma_radar
         /// <summary>
         /// Allocation wrap-up.
         /// </summary>
-        private async void FinishAlloc()
+        private void FinishAlloc()
         {
             if (this.IsHumanHostile)
             {
