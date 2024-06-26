@@ -54,25 +54,23 @@ namespace eft_dma_radar
         private ulong HardSettings;
 
         private bool ToolboxMonoInitialized = false;
+        private bool ShouldInitializeToolboxMono => !this.ToolboxMonoInitialized && Memory.InGame && Memory.LocalPlayer is not null;
 
         public Toolbox()
         {
             if (this._config.MasterSwitch)
             {
+                Task.Run(() =>
+                {
+                    while (this.ShouldInitializeToolboxMono)
+                    {
+                        this.InitiateMonoAddresses();
+                        Thread.Sleep(5000);
+                    }
+                });
+
                 this.StartToolbox();
             }
-
-            Task.Run(() =>
-            {
-                int num = 0;
-                while (!this.ToolboxMonoInitialized)
-                {
-                    num++;
-
-                    this.InitiateMonoAddresses();
-                    Thread.Sleep(5000);
-                }
-            });
         }
 
         public void StartToolbox()
@@ -118,10 +116,19 @@ namespace eft_dma_radar
             {
                 if (this._config.MasterSwitch)
                 {
-                    Task.Run(() => { this.ToolboxWorker(); });
+                    Task.Run(() =>
+                    {
+                        this.ToolboxWorker();
+                    });
                     Thread.Sleep(250);
                 }
             }
+
+            if (this._config.Chams["RevertOnClose"])
+                this._chams?.ChamsDisable();
+            else if (!Memory.InGame || Memory.LocalPlayer is null)
+                this._chams?.RemovePointers();
+
             Program.Log("[ToolBox] Refresh thread stopped.");
         }
 
@@ -132,7 +139,7 @@ namespace eft_dma_radar
 
         private void InitiateMonoAddresses()
         {
-            if (!this.ToolboxMonoInitialized && Memory.InGame && Memory.LocalPlayer is not null)
+            if (this.ShouldInitializeToolboxMono)
             {
                 try
                 {
@@ -370,11 +377,11 @@ namespace eft_dma_radar
                         }
 
                         // Chams
-                        if (this._config.ChamsEnabled)
+                        if (this._config.Chams["Enabled"])
                         {
                             this._chams.ChamsEnable();
                         }
-                        else if (!this._config.ChamsEnabled && this._chams?.PlayersWithChamsCount > 0)
+                        else if (!this._config.Chams["Enabled"] && this._chams?.PlayersWithChamsCount > 0)
                         {
                             this._chams?.ChamsDisable();
                         }

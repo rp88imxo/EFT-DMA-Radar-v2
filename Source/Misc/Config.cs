@@ -12,20 +12,32 @@ namespace eft_dma_radar
         [JsonPropertyName("aimviewFOV")]
         public float AimViewFOV { get; set; }
 
+        [JsonPropertyName("unknownQuestItems")]
+        public bool UnknownQuestItems { get; set; }
+
         [JsonPropertyName("autoLootRefresh")]
         public bool AutoLootRefresh { get; set; }
 
         [JsonPropertyName("autoRefreshSettings")]
         public Dictionary<string, int> AutoRefreshSettings { get; set; }
 
-        [JsonPropertyName("chamsEnabled")]
-        public bool ChamsEnabled { get; set; }
+        [JsonPropertyName("chams")]
+        public Dictionary<string, bool> Chams { get; set; }
 
         [JsonPropertyName("defaultZoom")]
         public int DefaultZoom { get; set; }
 
+        [JsonPropertyName("enemyCount")]
+        public bool EnemyCount { get; set; }
+
         [JsonPropertyName("extendedReach")]
         public bool ExtendedReach { get; set; }
+
+        [JsonPropertyName("font")]
+        public int Font { get; set; }
+
+        [JsonPropertyName("fontSize")]
+        public int FontSize { get; set; }
 
         [JsonPropertyName("freezeTimeOfDay")]
         public bool FreezeTimeOfDay { get; set; }
@@ -44,6 +56,12 @@ namespace eft_dma_radar
 
         [JsonPropertyName("loggingEnabled")]
         public bool LoggingEnabled { get; set; }
+
+        [JsonPropertyName("lootItemViewer")]
+        public bool LootItemViewer { get; set; }
+
+        [JsonPropertyName("lootPing")]
+        public Dictionary<string, int> LootPing { get; set; }
 
         [JsonPropertyName("magDrillSpeed")]
         public int MagDrillSpeed { get; set; }
@@ -99,8 +117,8 @@ namespace eft_dma_radar
         [JsonPropertyName("processLoot")]
         public bool ProcessLoot { get; set; }
 
-        [JsonPropertyName("questHelperEnabled")]
-        public bool QuestHelperEnabled { get; set; }
+        [JsonPropertyName("questHelper")]
+        public bool QuestHelper { get; set; }
 
         [JsonPropertyName("showCorpses")]
         public bool ShowCorpses { get; set; }
@@ -126,14 +144,8 @@ namespace eft_dma_radar
         [JsonPropertyName("showSubItems")]
         public bool ShowSubItems { get; set; }
 
-        [JsonPropertyName("showTextOutline")]
-        public bool ShowTextOutline { get; set; }
-
         [JsonPropertyName("thermalVision")]
         public bool ThermalVision { get; set; }
-
-        [JsonPropertyName("threadSpinDelay")]
-        public int ThreadSpinDelay { get; set; }
 
         [JsonPropertyName("throwPowerStrength")]
         public int ThrowPowerStrength { get; set; }
@@ -144,8 +156,11 @@ namespace eft_dma_radar
         [JsonPropertyName("uiScale")]
         public int UIScale { get; set; }
 
-        [JsonPropertyName("vsyncEnabled")]
-        public bool Vsync { get; set; }
+        [JsonPropertyName("zoomSensitivity")]
+        public int ZoomSensitivity { get; set; }
+
+        [JsonPropertyName("vsync")]
+        public bool VSync { get; set; }
         #endregion
 
         #region Json Ignore
@@ -185,6 +200,7 @@ namespace eft_dma_radar
             ["ImportantLoot"] = new PaintColor.Colors { A = 255, R = 64, G = 224, B = 208 },
             ["QuestItem"] = new PaintColor.Colors { A = 255, R = 255, G = 0, B = 128 },
             ["QuestZone"] = new PaintColor.Colors { A = 255, R = 255, G = 0, B = 128 },
+            ["LootPing"] = new PaintColor.Colors { A = 255, R = 255, G = 255, B = 0 },
 
             // Other
             ["TextOutline"] = new PaintColor.Colors { A = 255, R = 0, G = 0, B = 0 },
@@ -197,81 +213,135 @@ namespace eft_dma_radar
         };
 
         [JsonIgnore]
-        public List<LootFilterManager.Filter> Filters { get => LootFilterManager.Filters; }
+        public Dictionary<string, int> DefaultAutoRefreshSettings = new Dictionary<string, int>()
+        {
+            ["Customs"] = 30,
+            ["Factory"] = 30,
+            ["Ground Zero"] = 30,
+            ["Interchange"] = 30,
+            ["Lighthouse"] = 30,
+            ["Reserve"] = 30,
+            ["Shoreline"] = 30,
+            ["Streets of Tarkov"] = 30,
+            ["The Lab"] = 30,
+            ["Woods"] = 30
+        };
 
         [JsonIgnore]
-        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions() { WriteIndented = true };
+        public Dictionary<string, bool> DefaultChamsSettings = new Dictionary<string, bool>()
+        {
+            ["AlternateMethod"] = false,
+            ["Bosses"] = false,
+            ["Corpses"] = false,
+            ["Cultists"] = false,
+            ["Enabled"] = false,
+            ["PlayerScavs"] = false,
+            ["PMCs"] = false,
+            ["RevertOnClose"] = false,
+            ["Rogues"] = false,
+            ["Scavs"] = false,
+            ["Teammates"] = false
+        };
+
+        [JsonIgnore]
+        public Dictionary<string, int> DefaultLootPingSettings = new Dictionary<string, int>()
+        {
+            ["AnimationSpeed"] = 1000,
+            ["Radius"] = 20,
+            ["Repetition"] = 1
+        };
+
+        [JsonIgnore]
+        public Dictionary<string, bool> DefaultMaxSkillsSettings = new Dictionary<string, bool>()
+        {
+            ["Endurance"] = false,
+            ["Strength"] = false,
+            ["Vitality"] = false,
+            ["Health"] = false,
+            ["Stress Resistance"] = false,
+            ["Metabolism"] = false,
+            ["Immunity"] = false,
+            ["Perception"] = false,
+            ["Intellect"] = false,
+            ["Attention"] = false,
+            ["Covert Movement"] = false,
+            ["Throwables"] = false,
+            ["Surgery"] = false,
+            ["Search"] = false,
+            ["Mag Drills"] = false,
+            ["Light Vests"] = false,
+            ["Heavy Vests"] = false,
+        };
+
+        [JsonIgnore]
+        public List<LootFilterManager.Filter> Filters
+        {
+            get => LootFilterManager.Filters;
+        }
+
+        [JsonIgnore]
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions()
+        {
+            WriteIndented = true
+        };
 
         [JsonIgnore]
         private static readonly object _lock = new();
 
         [JsonIgnore]
-        public LootFilterManager LootFilterManager { get => Program.LootFilterManager; }
+        public LootFilterManager LootFilterManager
+        {
+            get => Program.LootFilterManager;
+        }
 
         [JsonIgnore]
-        public ParallelOptions ParallelOptions { get; set; }
+        public ParallelOptions ParallelOptions
+        {
+            get; set;
+        }
 
         [JsonIgnore]
-        public List<Watchlist.Profile> Profiles { get => Watchlist.Profiles; }
+        public List<Watchlist.Profile> Profiles
+        {
+            get => Watchlist.Profiles;
+        }
 
         [JsonIgnore]
         private const string SettingsDirectory = "Configuration\\";
 
         [JsonIgnore]
-        public Watchlist Watchlist { get => Program.Watchlist; }
+        public Watchlist Watchlist
+        {
+            get => Program.Watchlist;
+        }
         #endregion
 
         public Config()
         {
             AimviewEnabled = false;
             AimViewFOV = 30;
+            UnknownQuestItems = false;
             AutoLootRefresh = false;
-            AutoRefreshSettings = new Dictionary<string, int>
-            {
-                ["Customs"] = 30,
-                ["Factory"] = 30,
-                ["Ground Zero"] = 30,
-                ["Interchange"] = 30,
-                ["Lighthouse"] = 30,
-                ["Reserve"] = 30,
-                ["Shoreline"] = 30,
-                ["Streets of Tarkov"] = 30,
-                ["The Lab"] = 30,
-                ["Woods"] = 30
-            };
-            ChamsEnabled = false;
+            AutoRefreshSettings = DefaultAutoRefreshSettings;
+            Chams = DefaultChamsSettings;
             DefaultZoom = 100;
+            EnemyCount = false;
             ExtendedReach = false;
+            Font = 0;
+            FontSize = 13;
             FreezeTimeOfDay = false;
             ImportantLootOnly = false;
             InfiniteStamina = false;
             InstantADS = false;
             JumpPowerStrength = 0;
             LoggingEnabled = false;
+            LootItemViewer = false;
+            LootPing = DefaultLootPingSettings;
             MagDrillSpeed = 1;
             MainThermalSetting = new ThermalSettings(1f, 0.0011f, -0.1f, 0);
             MasterSwitch = false;
             MaxDistance = 325;
-            MaxSkills = new Dictionary<string, bool>
-            {
-                ["Endurance"] = false,
-                ["Strength"] = false,
-                ["Vitality"] = false,
-                ["Health"] = false,
-                ["Stress Resistance"] = false,
-                ["Metabolism"] = false,
-                ["Immunity"] = false,
-                ["Perception"] = false,
-                ["Intellect"] = false,
-                ["Attention"] = false,
-                ["Covert Movement"] = false,
-                ["Throwables"] = false,
-                ["Surgery"] = false,
-                ["Search"] = false,
-                ["Mag Drills"] = false,
-                ["Light Vests"] = false,
-                ["Heavy Vests"] = false,
-            };
+            MaxSkills = DefaultMaxSkillsSettings;
             MinCorpseValue = 100000;
             MinImportantLootValue = 300000;
             MinLootValue = 90000;
@@ -282,11 +352,11 @@ namespace eft_dma_radar
             OpticThermalSetting = new ThermalSettings(1f, 0.0011f, -0.1f, 0);
             OpticThermalVision = false;
             PaintColors = DefaultPaintColors;
-            ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 1 };
+            ParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 2 };
             PlayerAimLineLength = 1000;
             PrimaryTeammateId = null;
             ProcessLoot = true;
-            QuestHelperEnabled = true;
+            QuestHelper = true;
             ShowCorpses = false;
             ShowExfilNames = false;
             ShowHoverArmor = false;
@@ -295,13 +365,12 @@ namespace eft_dma_radar
             ShowNames = false;
             ShowRadarStats = false;
             ShowSubItems = false;
-            ShowTextOutline = true;
             ThermalVision = false;
-            ThreadSpinDelay = 100;
             ThrowPowerStrength = 1;
             TimeOfDay = 12f;
             UIScale = 100;
-            Vsync = true;
+            ZoomSensitivity = 25;
+            VSync = true;
         }
 
         /// <summary>
@@ -328,6 +397,7 @@ namespace eft_dma_radar
                 }
                 catch (Exception ex)
                 {
+                    Program.Log($"TryLoadConfig - {ex.Message}\n{ex.StackTrace}");
                     config = null;
                     return false;
                 }

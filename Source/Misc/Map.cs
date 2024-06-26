@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.ComponentModel;
 
 namespace eft_dma_radar
 {
@@ -29,7 +30,10 @@ namespace eft_dma_radar
         /// </summary>
         public float Height = 0;
 
-        private Config _config { get => Program.Config; }
+        private Config _config
+        {
+            get => Program.Config;
+        }
 
         /// <summary>
         /// Get exact player location (with optional X,Y offsets).
@@ -105,9 +109,7 @@ namespace eft_dma_radar
                 coords.X = (coords.X - textWidth / 2);
                 coords.Y = (coords.Y - text.TextSize / 2) - 3;
 
-                if (_config.ShowTextOutline)
-                    canvas.DrawText(exfil.Name, coords, Extensions.GetTextOutlinePaint());
-
+                canvas.DrawText(exfil.Name, coords, Extensions.GetTextOutlinePaint());
                 canvas.DrawText(exfil.Name, coords, text);
             }
         }
@@ -161,8 +163,8 @@ namespace eft_dma_radar
             }
 
             var coords = this.GetPoint(7 * UIScale, 3 * UIScale);
-            if (_config.ShowTextOutline)
-                canvas.DrawText(label, coords, Extensions.GetTextOutlinePaint());
+
+            canvas.DrawText(label, coords, Extensions.GetTextOutlinePaint());
             canvas.DrawText(label, coords, text);
         }
         /// <summary>
@@ -190,8 +192,9 @@ namespace eft_dma_radar
             }
 
             var coords = this.GetPoint(7 * UIScale, 3 * UIScale);
-            if (_config.ShowTextOutline)
-                canvas.DrawText(label, coords, Extensions.GetTextOutlinePaint());
+            var paintTest = Extensions.GetTextOutlinePaint();
+
+            canvas.DrawText(label, coords, paintTest);
             canvas.DrawText(label, coords, text);
         }
         /// <summary>
@@ -258,8 +261,8 @@ namespace eft_dma_radar
             }
 
             var coords = this.GetPoint(7 * UIScale, 3 * UIScale);
-            if (_config.ShowTextOutline)
-                canvas.DrawText(label, coords, Extensions.GetTextOutlinePaint());
+
+            canvas.DrawText(label, coords, Extensions.GetTextOutlinePaint());
             canvas.DrawText(label, coords, text);
         }
         /// <summary>
@@ -287,8 +290,8 @@ namespace eft_dma_radar
             }
 
             var coords = this.GetPoint(7 * UIScale, 3 * UIScale);
-            if (_config.ShowTextOutline)
-                canvas.DrawText(label, coords, Extensions.GetTextOutlinePaint());
+            
+            canvas.DrawText(label, coords, Extensions.GetTextOutlinePaint());
             canvas.DrawText(label, coords, text);
         }
         /// <summary>
@@ -333,8 +336,7 @@ namespace eft_dma_radar
             {
                 var coords = this.GetPoint(9 * UIScale, spacing);
 
-                if (_config.ShowTextOutline)
-                    canvas.DrawText(line, coords, Extensions.GetTextOutlinePaint());
+                canvas.DrawText(line, coords, Extensions.GetTextOutlinePaint());
                 canvas.DrawText(line, coords, text);
                 spacing += 12 * UIScale;
             }
@@ -480,8 +482,9 @@ namespace eft_dma_radar
         private void DrawToolTip(SKCanvas canvas, LootContainer container)
         {
             var maxWidth = 0f;
+            var tmpItems = container.Items.Count > 1 ? LootManager.MergeDupelicateLootItems(container.Items) : container.Items;
 
-            foreach (var item in container.Items)
+            foreach (var item in tmpItems)
             {
                 var width = SKPaints.TextBase.MeasureText(item.GetFormattedValueName());
                 maxWidth = Math.Max(maxWidth, width);
@@ -490,7 +493,7 @@ namespace eft_dma_radar
             var textSpacing = 15 * UIScale;
             var padding = 3 * UIScale;
 
-            var height = container.Items.Count * textSpacing;
+            var height = tmpItems.Count * textSpacing;
 
             var left = X + padding;
             var top = Y - padding;
@@ -501,7 +504,8 @@ namespace eft_dma_radar
             canvas.DrawRect(backgroundRect, SKPaints.PaintTransparentBacker);
 
             var y = bottom - (padding * 2.2f);
-            foreach (var item in container.Items)
+
+            foreach (var item in tmpItems)
             {
                 canvas.DrawText(item.GetFormattedValueName(), left + padding, y, Extensions.GetTextPaint(item));
                 y -= textSpacing;
@@ -518,18 +522,18 @@ namespace eft_dma_radar
             var isEmptyCorpseName = corpse.Name.Contains("Clone");
 
             if (!isEmptyCorpseName)
-            {
                 height += 1;
-            }
 
             foreach (var gearItem in items)
             {
                 var width = SKPaints.TextBase.MeasureText(gearItem.GetFormattedTotalValueName());
                 maxWidth = Math.Max(maxWidth, width);
+                
+                var tmpItems = gearItem.Loot.Count > 1 ? LootManager.MergeDupelicateLootItems(gearItem.Loot) : gearItem.Loot;
 
-                if (_config.ShowSubItems && gearItem.Loot.Count > 0)
+                if (_config.ShowSubItems && tmpItems.Count > 0)
                 {
-                    foreach (var lootItem in gearItem.Loot)
+                    foreach (var lootItem in tmpItems)
                     {
                         if (lootItem.AlwaysShow || lootItem.Important || (!_config.ImportantLootOnly && _config.ShowSubItems && lootItem.Value > _config.MinSubItemValue))
                         {
@@ -558,9 +562,11 @@ namespace eft_dma_radar
             var y = bottom - (padding * 2.2f);
             foreach (var gearItem in items)
             {
-                if (_config.ShowSubItems && gearItem.Loot.Count > 0)
+                var tmpItems = gearItem.Loot.Count > 1 ? LootManager.MergeDupelicateLootItems(gearItem.Loot) : gearItem.Loot;
+
+                if (_config.ShowSubItems && tmpItems.Count > 0)
                 {
-                    foreach (var lootItem in gearItem.Loot)
+                    foreach (var lootItem in tmpItems)
                     {
                         if (lootItem.AlwaysShow || lootItem.Important || (!_config.ImportantLootOnly && _config.ShowSubItems && lootItem.Value > _config.MinSubItemValue))
                         {
