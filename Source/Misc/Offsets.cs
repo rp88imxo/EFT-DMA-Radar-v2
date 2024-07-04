@@ -258,12 +258,12 @@
     public struct LocalGameWorld // [Class] -.ClientLocalGameWorld : ClientGameWorld
     {
         public const uint MapName = 0x40; //[40] string_0x40 : String
-        public const uint MainPlayer = 0x148; // to EFT.Player
+        public const uint MainPlayer = 0x150; // to EFT.Player
         public const uint ExfilController = 0x18; // to ExfilController
         public const uint LootList = 0xC8; // to UnityList
-        public const uint RegisteredPlayers = 0xF0; // to RegisteredPlayers
-        public const uint Grenades = 0x1A0; // to Grenades
-        public const uint RaidStarted = 0x220; //[220] boolean_0x220 : Boolean
+        public const uint RegisteredPlayers = 0xF8; // to RegisteredPlayers
+        public const uint Grenades = 0x1A0 + 0x8; // to Grenades
+        public const uint RaidStarted = 0x220 + 0x8; //[220] boolean_0x220 : Boolean
     }
     public struct EFTHardSettings
     {
