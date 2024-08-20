@@ -56,9 +56,9 @@
 
     public struct Exfil
     {
-        public const uint Status = 0xA8; // int32
-        public const uint Settings = 0x58; // to ExitTriggerSettings
-        public const uint Name = 0x10; // String
+        public const uint Status = 0xC0; // int32
+        public const uint Settings = 0x70; // to ExitTriggerSettings
+        public const uint Name = 0x10; // String maybe 0x40 new
     }
 
     public struct UnityClass
@@ -75,14 +75,14 @@
     {
         public static readonly uint[] To_TransformInternal = new uint[] { 0xA8, 0x28, 0x28, 0x10, 0x20 + (0 * 0x8), 0x10 }; // to TransformInternal
         public const uint MovementContext = 0x50; // to MovementContext
-        public const uint Corpse = 0x3D0; // EFT.Interactive.Corpse
-        public const uint Profile = 0x5C0; // to Profile
-        public const uint InventoryController = 0x618; // to InventoryController
-        public const uint PlayerBody = 0xA8; //[A8] _playerBody : EFT.PlayerBody
-        public const uint Location = 0x588; //[580] <Location>k__BackingField : String
-        public const uint Physical = 0x5D0; //[5C8] Physical : -.GClass
-        public const uint ProceduralWeaponAnimation = 0x1C0; //[1C0] EFT.Animations.ProceduralWeaponAnimation
-        public const uint HandsController = 0x620; //[620] _handsController : -.Player.AbstractHandsController
+        public const uint Corpse = 0x3F8; // EFT.Interactive.Corpse
+        public const uint Profile = 0x620; // to Profile
+        public const uint InventoryController = 0x678; // to InventoryController
+        public const uint PlayerBody = 0xB8; //[A8] _playerBody : EFT.PlayerBody
+        public const uint Location = 0x5E8; //[580] <Location>k__BackingField : String
+        public const uint Physical = 0x630; //[5C8] Physical : -.GClass
+        public const uint ProceduralWeaponAnimation = 0x1D8; //[1C0] EFT.Animations.ProceduralWeaponAnimation
+        public const uint HandsController = 0x680; //[620] _handsController : -.Player.AbstractHandsController
     }
 
     public struct Profile // EFT.Profile
@@ -98,7 +98,7 @@
     {
         public const uint GroupID = 0x18; // to UnityString
         public const uint PlayerSide = 0xF8; // int32
-        public const uint IsAI = 0x110; // bool
+        public const uint IsAI = 0x108; // bool MAYBE 108 OR 110
         public const uint ID = 0x50; // to UnityString
         public const uint NickName = 0x48; // to UnityString
         public const uint AccountID = 0x50; // to UnityString
@@ -123,7 +123,7 @@
 
     public struct ObserverdPlayerMovementContext
     {
-        public const uint Rotation = 0x78; // to Vector2
+        public const uint Rotation = 0x88; // to Vector2
     }
 
     public struct PlayerSettings
@@ -133,8 +133,8 @@
 
     public struct InventoryController // -.GClass1A98
     {
-        public const uint Inventory = 0x138; // to Inventory
-        public const uint ObservedPlayerInventory = 0x138; // to Inventory
+        public const uint Inventory = 0x118; // to Inventory
+        public const uint ObservedPlayerInventory = 0x118; // to Inventory
     }
 
     public struct Inventory
@@ -149,8 +149,8 @@
 
     public struct Slot
     {
-        public const uint Name = 0x18; // string,unity
-        public const uint ContainedItem = 0x40; // to LootItemBase
+        public const uint Name = 0x30; // string,unity
+        public const uint ContainedItem = 0x38; // to LootItemBase
         public const uint Size = 0x8;
     }
 
@@ -187,7 +187,7 @@
     public struct ItemTemplate //EFT.InventoryLogic.ItemTemplate
     {
         public const uint BsgId = 0x60; // string,unity
-        public const uint IsQuestItem = 0x9C; // bool
+        public const uint IsQuestItem = 0xBC; // bool
     }
 
     public struct LootBaseObject
@@ -338,10 +338,10 @@
         public const uint MapName = 0x50; //[48] string_0x48 : String
         public const uint MainPlayer = 0x140; // to EFT.Player
         public const uint ExfilController = 0x20; // to ExfilController
-        public const uint LootList = 0xD0; // to UnityList
+        public const uint LootList = 0xC0; // to UnityList
         public const uint RegisteredPlayers = 0xE8; // to RegisteredPlayers
         public const uint Grenades = 0x198; // to Grenades
-        public const uint RaidStarted = 0x220; //[230] boolean_0x230 : Boolean
+        public const uint RaidStarted = 0x210; //[230] boolean_0x230 : Boolean
     }
 
     public struct EFTHardSettings
