@@ -73,7 +73,7 @@
 
     public struct Player // EFT.Player : MonoBehaviour, 
     {
-        public static readonly uint[] To_TransformInternal = new uint[] { 0xA8, 0x28, 0x28, 0x10, 0x20 + (0 * 0x8), 0x10 }; // to TransformInternal
+        public static readonly uint[] To_TransformInternal = new uint[] { PlayerBody, 0x28, 0x28, 0x10, 0x20 + (0 * 0x8), 0x10 }; // to TransformInternal
         public const uint MovementContext = 0x50; // to MovementContext
         public const uint Corpse = 0x3F8; // EFT.Interactive.Corpse
         public const uint Profile = 0x620; // to Profile
