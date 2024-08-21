@@ -190,6 +190,7 @@
 
     public struct ItemTemplate //EFT.InventoryLogic.ItemTemplate
     {
+        public const uint MongoID = 0x50; // [50] <_id>k__BackingField : EFT.MongoID
         public const uint BsgId = 0x60; // string,unity
         public const uint IsQuestItem = 0xBC; // bool
     }
