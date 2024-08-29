@@ -135,11 +135,17 @@ namespace eft_dma_radar
         public void DrawLootableObject(SKCanvas canvas, LootableObject item, float heightDiff)
         {
             if (item is LootItem lootItem)
+            {
                 this.DrawLootItem(canvas, lootItem, heightDiff);
+            }
             else if (item is LootContainer container)
+            {
                 this.DrawLootContainer(canvas, container, heightDiff);
+            }
             else if (item is LootCorpse corpse)
+            {
                 this.DrawLootCorpse(canvas, corpse, heightDiff);
+            }
         }
 
         /// <summary>
