@@ -77,7 +77,7 @@
 
     public struct Player // EFT.Player : MonoBehaviour, 
     {
-        public static readonly uint[] To_TransformInternal = new uint[] { 0xB8, 0x28, 0x28, 0x10, 0x20 + (0 * 0x8), 0x10 }; // to TransformInternal
+        public static readonly uint[] To_TransformInternal = new uint[] { PlayerBody, 0x28, 0x28, 0x10, 0x20 + (0 * 0x8), 0x10 }; // to TransformInternal
         public const uint MovementContext = 0x50; // to MovementContext
         public const uint Corpse = 0x3F8; // EFT.Interactive.Corpse
         public const uint Profile = 0x620; // [620] <Profile>k__BackingField : EFT.Profile
@@ -155,6 +155,7 @@
     {
         public const uint Name = 0x48; // [48] <ID>k__BackingField : String
         public const uint ContainedItem = 0x38; // [38] <ContainedItem>k__BackingField : EFT.InventoryLogic.Item
+        public const uint ParentItem = 0x40; // [40] <ParentItem>k__BackingField : EFT.InventoryLogic.Item
         public const uint Size = 0x8;
     }
 
@@ -170,7 +171,7 @@
 
     public struct LootInteractiveClass
     {
-        public const uint LootBaseObject = 0x18; // to LootBaseObject
+        public const uint LootBaseObject = 0x10; // to LootBaseObject
         public const uint ItemOwner = 0x40; // to LootItemBase
         public const uint ContainerItemOwner = 0x120; // to ContainerItemOwner
     }
@@ -185,7 +186,7 @@
 
     public struct StackSlot // EFT.InventoryLogic.StackSlot : Object, IContainer
     {
-        public const uint Items = 0x10; // to UnityList , of LootItemBase
+        public const uint Items = 0x10; // [10] _items : System.Collections.Generic.List<Item>
     }
 
     public struct ItemTemplate //EFT.InventoryLogic.ItemTemplate
@@ -362,18 +363,12 @@
     public struct LootableContainer
     {
         public const uint ItemOwner = 0x118; // [118] ItemOwner : -.GClass27E2
-        public const uint Template = 0x128; // [128] Template : String
+        public const uint Template = 0x120; // [120] Template : String
     }
 
     public struct ObservedLootItem
     {
-        public const uint ItemOwner = 0x40; // [40] ItemOwner : -.GClass27E2
         public const uint Item = 0xB0; // [B0] item_0xB0 : EFT.InventoryLogic.Item
-    }
-
-    public struct ContainerItemOwner
-    {
-        public const uint Item = 0xC0; // [C0] item_0xC0 : EFT.InventoryLogic.Item
     }
 
     public struct Item
@@ -383,7 +378,6 @@
 
     public struct WeaponTemplate
     {
-
         public const uint Chambers = 0x188; // [188] Chambers : EFT.InventoryLogic.Slot[]
         public const uint AllowJam = 0x2DC; // [2DC] AllowJam : Boolean
         public const uint AllowFeed = 0x2DD; // [2DD] AllowFeed : Boolean
@@ -393,26 +387,27 @@
 
     public struct ItemOwner
     {
-        public const uint Item = 0xC0; //[C0] item_0xC0 : EFT.InventoryLogic.Item
+        public const uint Item = 0xB8; // [B8] item_0xB8 : EFT.InventoryLogic.Item
     }
 
     public struct MovementContext //EFT.MovementContext
     {
         public const uint Rotation = 0x408; // [408] _myRotation : UnityEngine.Vector2
-        public const uint BaseMovementState = 0xE0; //[E0] <CurrentState>k__BackingField : EFT.BaseMovementState
+        public const uint BaseMovementState = 0xE0; // [E0] <CurrentState>k__BackingField : EFT.BaseMovementState
     }
 
     public struct Physical
     {
-        public const uint Stamina = 0x38; //[38] Stamina : -.GClass
-        public const uint HandsStamina = 0x40; //[40] HandsStamina : -.GClass
-        public const uint StaminaCapacity = 0xC0; //[C0] StaminaCapacity : Single
-        public const uint HandsCapacity = 0xC8; //[C8] HandsCapacity : Single
+        public const uint Stamina = 0x38; // [38] Stamina : -.GClass0792
+        public const uint HandsStamina = 0x40; // [40] HandsStamina : -.GClass0792
+        public const uint StaminaCapacity = 0xC0; // [C0] StaminaCapacity : Single
+        public const uint HandsCapacity = 0xC8; // [C8] HandsCapacity : Single
     }
 
     public struct Stamina
     {
         public const uint Current = 0x48; //[48] Current : Single
+        public const uint ForceMode = 0x5C; // [5C] boolean_0x5C : Boolean
     }
 
     public struct BaseMovementState
@@ -506,8 +501,35 @@
 
     public struct QuestData
     {
-        public const uint ID = 0x10;  //[10] Id : String
-        public const uint Template = 0x28; //[28] Template : -.GClass311A
-        public const uint Status = 0x34; //[34] Status : System.Int32
+        public const uint ID = 0x10;  // [10] Id : String
+        public const uint CompletedConditions = 0x20;  // [20] CompletedConditions : System.Collections.Generic.HashSet<String>
+        public const uint Template = 0x28; // [28] Template : -.GClass342E
+        public const uint Status = 0x34; // [34] Status : System.Int32
+    }
+
+    public struct Hashset
+    {
+        public const uint Size = 0x10;
+        public const uint Base = 0x18;
+        public const uint Start = 0x28;
+        public const uint Count = 0x3C;
+    }
+
+    public struct TOD_SKY
+    {
+        public const uint CachedPtr = 0x10; // [10] m_CachedPtr : IntPtr
+        public const uint Cycle = 0x18; // [18] Cycle : -.TOD_CycleParameters
+        public const uint Instance = 0x20;
+        public const uint TOD_Components = 0x78; // [78] tOD_Components_0x78 : -.TOD_Components
+    }
+
+    public struct TOD_Components
+    {
+        public const uint Time = 0x110; // [110] tOD_Time_0x110 : -.TOD_Time
+    }
+
+    public struct TOD_Time
+    {
+        public const uint GameDateTime = 0x18; // [18] GameDateTime : EFT.GameDateTime
     }
 }
