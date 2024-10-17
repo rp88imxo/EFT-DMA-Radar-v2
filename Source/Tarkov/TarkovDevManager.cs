@@ -1,8 +1,8 @@
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Numerics;
 using System.Text;
 using System.Text.Json;
-using static eft_dma_radar.Maps;
 
 namespace eft_dma_radar
 {
@@ -16,6 +16,9 @@ namespace eft_dma_radar
         private static readonly Dictionary<string, Tasks> _allTasks = new(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, Containers> _allLootContainers = new(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, Maps> _allMaps = new(StringComparer.OrdinalIgnoreCase);
+
+        private static readonly string FileName = "api_tarkov_dev_items.json";
+        private static bool DataFileExists => File.Exists(FileName);
 
         public static ReadOnlyDictionary<string, LootItem> AllItems => new(_allItems);
         public static ReadOnlyDictionary<string, QuestItems> AllQuestItems => new(_allQuestItems);
@@ -35,14 +38,10 @@ namespace eft_dma_radar
         {
             TarkovDevResponse jsonResponse;
 
-            if (ShouldFetchDataFromApi())
-            {
+            //if (ShouldFetchDataFromApi())
                 jsonResponse = FetchDataFromApi();
-            }
-            else
-            {
-                jsonResponse = LoadDataFromFile();
-            }
+            //else
+                //jsonResponse = LoadDataFromFile();
 
             if (jsonResponse is not null)
             {
@@ -56,14 +55,15 @@ namespace eft_dma_radar
 
         private static bool ShouldFetchDataFromApi()
         {
-            return !File.Exists("api_tarkov_dev_items.json") || File.GetLastWriteTime("api_tarkov_dev_items.json").AddHours(6) < DateTime.Now;
+            return !TarkovDevManager.DataFileExists || File.GetLastWriteTime(FileName).AddHours(6) < DateTime.Now;
         }
 
         private static TarkovDevResponse FetchDataFromApi()
         {
             using (var client = new HttpClient())
             {
-                //Create body and content-type
+                client.Timeout = TimeSpan.FromSeconds(20);
+
                 var body = new
                 {
                     query = @"query {
@@ -107,7 +107,7 @@ namespace eft_dma_radar
                                                 normalizedName
                                             }
                                             ... on TaskObjectiveItem {
-                                                item {
+                                                items {
                                                 id
                                                 name
                                                 shortName
@@ -252,8 +252,17 @@ namespace eft_dma_radar
                                     }
                                     maps{
                                         name
-                                        extracts{
+                                        extracts {
                                             name
+                                            position {
+                                                x
+                                                y
+                                                z
+                                            }
+                                        }
+                                        transits {
+                                            id
+                                            description
                                             position {
                                                 x
                                                 y
@@ -263,18 +272,45 @@ namespace eft_dma_radar
                                     }
                                 }"
                 };
+
                 var jsonBody = JsonSerializer.Serialize(body);
                 var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-                var response = client.PostAsync("https://api.tarkov.dev/graphql", content).Result;
-                var responseString = response.Content.ReadAsStringAsync().Result;
-                File.WriteAllText("api_tarkov_dev_items.json", responseString);
-                return JsonSerializer.Deserialize<TarkovDevResponse>(responseString);
+
+                try
+                {
+                    var response = client.PostAsync("https://api.tarkov.dev/graphql", content).Result;
+
+                    if (response.StatusCode == HttpStatusCode.RequestTimeout)
+                        throw new FileNotFoundException($"Tarkov.Dev API request failed!");
+
+                    response.EnsureSuccessStatusCode();
+
+                    var responseString = response.Content.ReadAsStringAsync().Result;
+                    File.WriteAllText(FileName, responseString);
+                    return JsonSerializer.Deserialize<TarkovDevResponse>(responseString);
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        Program.Log("Tarkov.Dev API request failed - attempting fall back to file");
+
+                        if (!TarkovDevManager.DataFileExists)
+                            throw new FileNotFoundException($"The data file '{FileName}' doesn't exist!");
+
+                        return TarkovDevManager.LoadDataFromFile();
+                    }
+                    catch
+                    {
+                        throw new FileNotFoundException($"Tarkov.Dev API request failed & the data file '{FileName}' doesn't exist!");
+                    }
+                }
             }
         }
 
         private static TarkovDevResponse LoadDataFromFile()
         {
-            var responseString = File.ReadAllText("api_tarkov_dev_items.json");
+            var responseString = File.ReadAllText(FileName);
             return JsonSerializer.Deserialize<TarkovDevResponse>(responseString);
         }
 
@@ -336,6 +372,10 @@ namespace eft_dma_radar
                                 y = z.position.z,
                                 z = z.position.y
                             }
+                        }).ToList(),
+                        Items = objective.items?.Select(i => new ObjectiveItem
+                        {
+                            Id = i.id
                         }).ToList(),
 
                         Count = objective.count,
@@ -410,18 +450,31 @@ namespace eft_dma_radar
                 var newMap = new Maps()
                 {
                     name = map.name,
-                    extracts = new List<Extract>()
+                    extracts = new List<Maps.Extract>(),
+                    transits = new List<Maps.MapTransit>()
                 };
 
                 foreach (var extract in map.extracts)
                 {
-                    var newExtract = new Extract()
+                    var newExtract = new Maps.Extract()
                     {
                         name = extract.name,
                         position = new Vector3(extract.position.x, extract.position.z, extract.position.y)
                     };
 
                     newMap.extracts.Add(newExtract);
+                };
+
+                foreach (var transit in map.transits)
+                {
+                    var newTransit = new Maps.MapTransit()
+                    {
+                        id = transit.id,
+                        description = transit.description,
+                        position = new Vector3(transit.position.x, transit.position.z, transit.position.y)
+                    };
+
+                    newMap.transits.Add(newTransit);
                 };
 
                 _allMaps.TryAdd(newMap.name, newMap);
@@ -500,11 +553,17 @@ namespace eft_dma_radar
             public List<ObjectiveZones>? zones { get; set; } 
             public int? count { get; set; }
             public bool? foundInRaid { get; set; }
-            public ObjectiveItems questItem { get; set; }
+            public List<ObjectiveRequiredItem>? items { get; set; }
+            public ObjectiveQuestItem questItem { get; set; }
         }
     }
 
-    public class ObjectiveItems
+    public class ObjectiveRequiredItem
+    {
+        public string id { get; set; }
+    }
+
+    public class ObjectiveQuestItem
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -568,7 +627,6 @@ namespace eft_dma_radar
         public string Name { get; set; }
         public string ID { get; set; }
         public string ShortName { get; set; }
-
     }
 
     public class ObjectiveItem
@@ -584,10 +642,25 @@ namespace eft_dma_radar
     {
         public string name { get; set; }
         public List<ExtractInfo> extracts { get; set; }
+        public List<TransitInfo> transits { get; set; }
 
         public class ExtractInfo
         {
             public string name { get; set; }
+            public Position position { get; set; }
+
+            public class Position
+            {
+                public float x { get; set; }
+                public float y { get; set; }
+                public float z { get; set; }
+            }
+        }
+
+        public class TransitInfo
+        {
+            public string id { get; set; }
+            public string description { get; set; }
             public Position position { get; set; }
 
             public class Position
@@ -603,12 +676,20 @@ namespace eft_dma_radar
     {
         public string name { get; set; }
         public List<Extract> extracts { get; set; }
+        public List<MapTransit> transits { get; set; }
 
         public class Extract
         {
             public string name { get; set; }
             public Vector3 position { get; set; }
 
+        }
+
+        public class MapTransit
+        {
+            public string id { get; set; }
+            public string description { get; set; }
+            public Vector3 position { get; set; }
         }
     }
 
@@ -623,13 +704,12 @@ namespace eft_dma_radar
             public string Description { get; set; }
             public string Type { get; set; }
             public string ID { get; set; }
+            public List<ObjectiveItem> Items { get; set; }
             public List<ObjectiveMaps> Maps { get; set; } = new List<ObjectiveMaps>();
-            public List<ObjectiveZones> Zones { get; set; } = new List<ObjectiveZones>(); // Renamed from ObjectiveZones for clarity
-            // Add more properties here as needed, for example:
+            public List<ObjectiveZones> Zones { get; set; } = new List<ObjectiveZones>();
             public ObjectiveItem QuestItem { get; set; }
-            public int? Count { get; set; } // For objectives requiring collecting or using a certain number of items
-            public bool? FoundInRaid { get; set; } // For objectives requiring items to be found in raid
-            // You can add more specific fields as needed for various objective types.
+            public int? Count { get; set; }
+            public bool? FoundInRaid { get; set; }
         }
     }
 

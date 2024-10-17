@@ -1,14 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
-using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
-using System.Text;
-using static eft_dma_radar.Config;
-using Offsets;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics;
-using System.Runtime.CompilerServices;
-using System.Data;
 
 namespace eft_dma_radar
 {
@@ -108,14 +99,16 @@ namespace eft_dma_radar
         /// <summary>
         /// Key = Slot Name, Value = Item 'Long Name' in Slot
         /// </summary>
-        public ConcurrentDictionary<string, GearItem> Gear
+        public List<GearManager.Gear> Gear
         {
-            get => this._gearManager is not null ? this._gearManager.Gear : null;
+            get => this._gearManager is not null ? this._gearManager.GearItems : null;
             set
             {
-                this._gearManager.Gear = value;
+                this._gearManager.GearItems = value;
             }
         }
+
+        public GearManager GearManager => this._gearManager;
         /// <summary>
         /// If 'true', Player object is no longer in the RegisteredPlayers list.
         /// Will be checked if dead/exfil'd on next loop.
@@ -128,6 +121,7 @@ namespace eft_dma_radar
         public bool isOfflinePlayer { get; set; } = false;
         public int PlayerSide { get; set; }
         public int PlayerRole { get; set; }
+        public bool HasRequiredGear { get; set; } = false;
 
         public List<ulong> BonePointers { get; } = new List<ulong>();
         public List<Vector3> BonePositions { get; } = new List<Vector3>();
@@ -321,7 +315,7 @@ namespace eft_dma_radar
         public bool HasThermal => _gearManager.HasThermal;
         public bool HasNVG => _gearManager.HasNVG;
 
-        public ActiveWeaponInfo WeaponInfo { get; set; }
+        public GearManager.Gear ItemInHands { get; set; }
         #endregion
 
         #region Constructor
@@ -459,20 +453,32 @@ namespace eft_dma_radar
             }
         }
 
-        public void SetWeaponInfo(string bsgID)
+        public void SetItemInHands(ulong pointer)
         {
-            if (TarkovDevManager.AllItems.TryGetValue(bsgID, out var item))
-            {
-                var weaponName = item.Item.shortName;
-                var ammoType = this._gearManager.GetAmmoTypeFromWeapon(weaponName);
+            this.ItemInHands = this.GearManager.GearItems.FirstOrDefault(x => x.Pointer == pointer);
+        }
 
-                this.WeaponInfo = new ActiveWeaponInfo
+        public void CheckForRequiredGear()
+        {
+            var found = false;
+            var loot = Memory.Loot;
+            var requiredQuestItems = QuestManager.RequiredItems;
+
+            foreach (var gearItem in this.Gear)
+            {
+                var parentItem = gearItem.Item.ID;
+
+                if (requiredQuestItems.Contains(parentItem) ||
+                    gearItem.Item.Loot.Any(x => requiredQuestItems.Contains(x.ID)) ||
+                    (loot is not null && loot.RequiredFilterItems is not null && (loot.RequiredFilterItems.ContainsKey(parentItem) ||
+                                      gearItem.Item.Loot.Any(x => loot.RequiredFilterItems.ContainsKey(x.ID)))))
                 {
-                    ID = bsgID,
-                    Name = weaponName,
-                    AmmoType = ammoType
-                };
+                    found = true;
+                    break;
+                }
             }
+
+            this.HasRequiredGear = found;
         }
         #endregion
 
@@ -502,8 +508,12 @@ namespace eft_dma_radar
                     var inFaction = Program.AIFactionManager.IsInFaction(this.Name, out var playerType);
 
                     if (!inFaction && Memory.IsPvEMode)
-                        if (this.Gear.ContainsKey("Dogtag"))
-                            playerType = (this.Gear["Dogtag"].Short == "BEAR" ? PlayerType.BEAR : PlayerType.USEC);
+                    {
+                        var dogtagSlot = this.Gear.FirstOrDefault(x => x.Slot.Key == "Dogtag");
+                        
+                        if (dogtagSlot.Item is not null)
+                            playerType = (dogtagSlot.Item.Short == "BEAR" ? PlayerType.BEAR : PlayerType.USEC);
+                    }
 
                     return playerType;
                 }
@@ -522,9 +532,9 @@ namespace eft_dma_radar
                 {
                     return PlayerType.Boss;
                 }
-                else if (this.PlayerRole == 49 || this.PlayerRole == 50)
+                else if (this.PlayerRole == 51 || this.PlayerRole == 52)
                 {
-                    return (this.PlayerRole == 49 ? PlayerType.BEAR : PlayerType.USEC);
+                    return (this.PlayerRole == 51 ? PlayerType.BEAR : PlayerType.USEC);
                 }
                 else
                 {
@@ -625,46 +635,43 @@ namespace eft_dma_radar
             var name = round1.AddEntry<ulong>(0, 4, this.Info, null, Offsets.ObservedPlayerView.NickName);
             var accountID = round1.AddEntry<ulong>(0, 5, this.Info, null, Offsets.ObservedPlayerView.AccountID);
             var playerSide = round1.AddEntry<int>(0, 6, this.Info, null, Offsets.ObservedPlayerView.PlayerSide);
-            var isAI = round1.AddEntry<bool>(0, 7, this.Info, null, Offsets.ObservedPlayerView.IsAI);
-            var groupID = round1.AddEntry<ulong>(0, 8, this.Info, null, Offsets.ObservedPlayerView.GroupID);
-            var playerBody = round1.AddEntry<ulong>(0, 9, this.Info, null, Offsets.ObservedPlayerView.PlayerBody);
-            var memberCategory = round1.AddEntry<int>(0, 10, this.Info, null, Offsets.PlayerInfo.MemberCategory);
+            var groupID = round1.AddEntry<ulong>(0, 7, this.Info, null, Offsets.ObservedPlayerView.GroupID);
+            var playerBody = round1.AddEntry<ulong>(0, 8, this.Info, null, Offsets.ObservedPlayerView.PlayerBody);
+            var memberCategory = round1.AddEntry<int>(0, 9, this.Info, null, Offsets.PlayerInfo.MemberCategory);
 
-            var movementContextPtr2 = round2.AddEntry<ulong>(0, 11, movementContextPtr1, null, Offsets.ObservedPlayerView.To_MovementContext[1]);
-            var transIntPtr2 = round2.AddEntry<ulong>(0, 12, transIntPtr1, null, Offsets.ObservedPlayerView.To_TransformInternal[1]);
-            var inventoryController = round2.AddEntry<ulong>(0, 13, inventoryControllerPtr1, null, Offsets.ObservedPlayerView.To_InventoryController[1]);
-            var healthController = round2.AddEntry<ulong>(0, 14, healthControllerPtr1, null, Offsets.ObservedPlayerView.To_HealthController[1]);
+            var movementContextPtr2 = round2.AddEntry<ulong>(0, 10, movementContextPtr1, null, Offsets.ObservedPlayerView.To_MovementContext[1]);
+            var transIntPtr2 = round2.AddEntry<ulong>(0, 11, transIntPtr1, null, Offsets.ObservedPlayerView.To_TransformInternal[1]);
+            var inventoryController = round2.AddEntry<ulong>(0, 12, inventoryControllerPtr1, null, Offsets.ObservedPlayerView.To_InventoryController[1]);
+            var healthController = round2.AddEntry<ulong>(0, 13, healthControllerPtr1, null, Offsets.ObservedPlayerView.To_HealthController[1]);
 
-            var movementContext = round3.AddEntry<ulong>(0, 15, movementContextPtr2, null, Offsets.ObservedPlayerView.To_MovementContext[2]);
-            var transIntPtr3 = round3.AddEntry<ulong>(0, 16, transIntPtr2, null, Offsets.ObservedPlayerView.To_TransformInternal[2]);
-            var inventory = round3.AddEntry<ulong>(0, 17, inventoryController, null, Offsets.InventoryController.Inventory);
+            var movementContext = round3.AddEntry<ulong>(0, 14, movementContextPtr2, null, Offsets.ObservedPlayerView.To_MovementContext[2]);
+            var transIntPtr3 = round3.AddEntry<ulong>(0, 15, transIntPtr2, null, Offsets.ObservedPlayerView.To_TransformInternal[2]);
+            var inventory = round3.AddEntry<ulong>(0, 16, inventoryController, null, Offsets.InventoryController.Inventory);
 
-            var transIntPtr4 = round4.AddEntry<ulong>(0, 18, transIntPtr3, null, Offsets.ObservedPlayerView.To_TransformInternal[3]);
-            var equipment = round4.AddEntry<ulong>(0, 19, inventory, null, Offsets.Inventory.Equipment);
+            var transIntPtr4 = round4.AddEntry<ulong>(0, 17, transIntPtr3, null, Offsets.ObservedPlayerView.To_TransformInternal[3]);
+            var equipment = round4.AddEntry<ulong>(0, 18, inventory, null, Offsets.Inventory.Equipment);
 
-            var transIntPtr5 = round5.AddEntry<ulong>(0, 20, transIntPtr4, null, Offsets.ObservedPlayerView.To_TransformInternal[4]);
-            var inventorySlots = round5.AddEntry<ulong>(0, 21, equipment, null, Offsets.Equipment.Slots);
+            var transIntPtr5 = round5.AddEntry<ulong>(0, 19, transIntPtr4, null, Offsets.ObservedPlayerView.To_TransformInternal[4]);
+            var inventorySlots = round5.AddEntry<ulong>(0, 20, equipment, null, Offsets.Equipment.Slots);
 
-            var transformInternal = round6.AddEntry<ulong>(0, 22, transIntPtr5, null, Offsets.ObservedPlayerView.To_TransformInternal[5]);
+            var transformInternal = round6.AddEntry<ulong>(0, 21, transIntPtr5, null, Offsets.ObservedPlayerView.To_TransformInternal[5]);
 
             scatterReadMap.Execute();
         }
 
         private void ProcessOnlinePlayerScatterReadResults(ScatterReadMap scatterReadMap)
         {
-            if (!scatterReadMap.Results[0][15].TryGetResult<ulong>(out var movementContext))
+            if (!scatterReadMap.Results[0][14].TryGetResult<ulong>(out var movementContext))
                 return;
-            if (!scatterReadMap.Results[0][13].TryGetResult<ulong>(out var inventoryController))
+            if (!scatterReadMap.Results[0][12].TryGetResult<ulong>(out var inventoryController))
                 return;
-            if (!scatterReadMap.Results[0][21].TryGetResult<ulong>(out var inventorySlots))
+            if (!scatterReadMap.Results[0][20].TryGetResult<ulong>(out var inventorySlots))
                 return;
-            if (!scatterReadMap.Results[0][22].TryGetResult<ulong>(out var transformInternal))
+            if (!scatterReadMap.Results[0][21].TryGetResult<ulong>(out var transformInternal))
                 return;
-            if (!scatterReadMap.Results[0][14].TryGetResult<ulong>(out var healthController))
+            if (!scatterReadMap.Results[0][13].TryGetResult<ulong>(out var healthController))
                 return;
-            if (!scatterReadMap.Results[0][9].TryGetResult<ulong>(out var playerBody))
-                return;
-            if (!scatterReadMap.Results[0][7].TryGetResult<bool>(out var isAI))
+            if (!scatterReadMap.Results[0][8].TryGetResult<ulong>(out var playerBody))
                 return;
             if (!scatterReadMap.Results[0][6].TryGetResult<int>(out var playerSide))
                 return;
@@ -672,9 +679,9 @@ namespace eft_dma_radar
                 return;
             if (!scatterReadMap.Results[0][4].TryGetResult<ulong>(out var name))
                 return;
-            if (!scatterReadMap.Results[0][10].TryGetResult<int>(out var memberCategory))
+            if (!scatterReadMap.Results[0][9].TryGetResult<int>(out var memberCategory))
                 return;
-            if (!scatterReadMap.Results[0][8].TryGetResult<ulong>(out var groupID))
+            if (!scatterReadMap.Results[0][7].TryGetResult<ulong>(out var groupID))
                 return;
 
             this.InitializePlayerProperties(movementContext, inventoryController, inventorySlots, transformInternal, playerBody, name, groupID, playerSide);
@@ -683,7 +690,7 @@ namespace eft_dma_radar
             this.HealthController = healthController;
             this.AccountID = Memory.ReadUnityString(accountID);
 
-            this.Type = this.GetOnlinePlayerType(isAI);
+            this.Type = this.GetOnlinePlayerType(this.AccountID == "0");
             this.IsPMC = (this.Type == PlayerType.BEAR || this.Type == PlayerType.USEC);
 
             this.FinishAlloc();
@@ -780,7 +787,7 @@ namespace eft_dma_radar
 
         public void RefreshGear()
         {
-            this._gearManager.RefreshGear();
+            //this._gearManager.RefreshGear();
         }
 
         /// <summary>
