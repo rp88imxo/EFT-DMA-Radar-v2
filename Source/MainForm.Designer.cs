@@ -51,7 +51,7 @@
             sldrMagDrillsSpeed = new MaterialSkin.Controls.MaterialSlider();
             swNoVisor = new MaterialSkin.Controls.MaterialSwitch();
             swInstantADS = new MaterialSkin.Controls.MaterialSwitch();
-            swNoRecoil = new MaterialSkin.Controls.MaterialSwitch();
+            swRecoil = new MaterialSkin.Controls.MaterialSwitch();
             cboThermalColorScheme = new MaterialSkin.Controls.MaterialComboBox();
             cboThermalType = new MaterialSkin.Controls.MaterialComboBox();
             sldrMinCorpse = new MaterialSkin.Controls.MaterialSlider();
@@ -189,9 +189,23 @@
             btnRemoveHotkey = new MaterialSkin.Controls.MaterialButton();
             rdbToggleKey = new MaterialSkin.Controls.MaterialRadioButton();
             rdbOnKey = new MaterialSkin.Controls.MaterialRadioButton();
-            swNoSway = new MaterialSkin.Controls.MaterialSwitch();
+            swWeaponSway = new MaterialSkin.Controls.MaterialSwitch();
             cboHotkeyKey = new MaterialSkin.Controls.MaterialComboBox();
             swChamsEvent = new MaterialSkin.Controls.MaterialSwitch();
+            sldrXFactor = new MaterialSkin.Controls.MaterialSlider();
+            swFrostBite = new MaterialSkin.Controls.MaterialSwitch();
+            sldrSwayFactor = new MaterialSkin.Controls.MaterialSlider();
+            sldrYFactor = new MaterialSkin.Controls.MaterialSlider();
+            swNoFog = new MaterialSkin.Controls.MaterialSwitch();
+            swNoRain = new MaterialSkin.Controls.MaterialSwitch();
+            swNoClouds = new MaterialSkin.Controls.MaterialSwitch();
+            swNoShadows = new MaterialSkin.Controls.MaterialSwitch();
+            swNoSun = new MaterialSkin.Controls.MaterialSwitch();
+            swNoMoon = new MaterialSkin.Controls.MaterialSwitch();
+            swMoonIntensity = new MaterialSkin.Controls.MaterialSwitch();
+            sldrMoonIntensity = new MaterialSkin.Controls.MaterialSlider();
+            swSunIntensity = new MaterialSkin.Controls.MaterialSwitch();
+            sldrSunIntensity = new MaterialSkin.Controls.MaterialSlider();
             sldrThermalColorCoefficient = new MaterialSkin.Controls.MaterialSlider();
             sldrMinTemperature = new MaterialSkin.Controls.MaterialSlider();
             sldrThermalRampShift = new MaterialSkin.Controls.MaterialSlider();
@@ -249,6 +263,9 @@
             colHotkeysType = new ColumnHeader();
             materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             tabSettingsMemoryWriting = new TabPage();
+            mcSettingsMemoryWritingWorld = new MaterialSkin.Controls.MaterialCard();
+            lblSettingsMemoryWritingWorld = new MaterialSkin.Controls.MaterialLabel();
+            lblSettingsMemoryWritingTimeScaleFactor = new MaterialSkin.Controls.MaterialLabel();
             mcSettingsMemoryWritingChams = new MaterialSkin.Controls.MaterialCard();
             lblSettingsMemoryWritingChams = new MaterialSkin.Controls.MaterialLabel();
             mcSettingsMemoryWritingSkillBuffs = new MaterialSkin.Controls.MaterialCard();
@@ -258,7 +275,6 @@
             mcSettingsMemoryWritingGlobal = new MaterialSkin.Controls.MaterialCard();
             lblSettingsMemoryWritingLootThroughWallsDistance = new MaterialSkin.Controls.MaterialLabel();
             lblSettingsMemoryWritingExtendedReachDistance = new MaterialSkin.Controls.MaterialLabel();
-            lblSettingsMemoryWritingTimeScaleFactor = new MaterialSkin.Controls.MaterialLabel();
             lblSettingsMemoryWritingGlobal = new MaterialSkin.Controls.MaterialLabel();
             mcSettingsMemoryWritingGear = new MaterialSkin.Controls.MaterialCard();
             lblSettingsMemoryWritingGear = new MaterialSkin.Controls.MaterialLabel();
@@ -432,6 +448,7 @@
             tabSettingsHotkeys.SuspendLayout();
             mcSettingsHotkeys.SuspendLayout();
             tabSettingsMemoryWriting.SuspendLayout();
+            mcSettingsMemoryWritingWorld.SuspendLayout();
             mcSettingsMemoryWritingChams.SuspendLayout();
             mcSettingsMemoryWritingSkillBuffs.SuspendLayout();
             mcSettingsMemoryWritingThermal.SuspendLayout();
@@ -698,7 +715,7 @@
             // 
             sldrTimeOfDay.Depth = 0;
             sldrTimeOfDay.ForeColor = Color.Black;
-            sldrTimeOfDay.Location = new Point(221, 80);
+            sldrTimeOfDay.Location = new Point(223, 200);
             sldrTimeOfDay.MouseState = MaterialSkin.MouseState.HOVER;
             sldrTimeOfDay.Name = "sldrTimeOfDay";
             sldrTimeOfDay.RangeMax = 24;
@@ -716,7 +733,7 @@
             // 
             swExtendedReach.Depth = 0;
             swExtendedReach.Font = new Font("Segoe UI", 9F);
-            swExtendedReach.Location = new Point(15, 205);
+            swExtendedReach.Location = new Point(17, 125);
             swExtendedReach.Margin = new Padding(0);
             swExtendedReach.MouseLocation = new Point(-1, -1);
             swExtendedReach.MouseState = MaterialSkin.MouseState.HOVER;
@@ -733,7 +750,7 @@
             // 
             swFreezeTime.Depth = 0;
             swFreezeTime.Font = new Font("Segoe UI", 9F);
-            swFreezeTime.Location = new Point(15, 85);
+            swFreezeTime.Location = new Point(17, 205);
             swFreezeTime.Margin = new Padding(0);
             swFreezeTime.MouseLocation = new Point(-1, -1);
             swFreezeTime.MouseState = MaterialSkin.MouseState.HOVER;
@@ -750,7 +767,7 @@
             // 
             swNightVision.Depth = 0;
             swNightVision.Font = new Font("Segoe UI", 9F);
-            swNightVision.Location = new Point(381, 85);
+            swNightVision.Location = new Point(388, 155);
             swNightVision.Margin = new Padding(0);
             swNightVision.MouseLocation = new Point(-1, -1);
             swNightVision.MouseState = MaterialSkin.MouseState.HOVER;
@@ -767,7 +784,7 @@
             // 
             swOpticalThermal.Depth = 0;
             swOpticalThermal.Font = new Font("Segoe UI", 9F);
-            swOpticalThermal.Location = new Point(194, 85);
+            swOpticalThermal.Location = new Point(201, 155);
             swOpticalThermal.Margin = new Padding(0);
             swOpticalThermal.MouseLocation = new Point(-1, -1);
             swOpticalThermal.MouseState = MaterialSkin.MouseState.HOVER;
@@ -784,7 +801,7 @@
             // 
             swThermalVision.Depth = 0;
             swThermalVision.Font = new Font("Segoe UI", 9F);
-            swThermalVision.Location = new Point(15, 85);
+            swThermalVision.Location = new Point(22, 155);
             swThermalVision.Margin = new Padding(0);
             swThermalVision.MouseLocation = new Point(-1, -1);
             swThermalVision.MouseState = MaterialSkin.MouseState.HOVER;
@@ -819,7 +836,7 @@
             // 
             swNoVisor.Depth = 0;
             swNoVisor.Font = new Font("Segoe UI", 9F);
-            swNoVisor.Location = new Point(408, 125);
+            swNoVisor.Location = new Point(388, 118);
             swNoVisor.Margin = new Padding(0);
             swNoVisor.MouseLocation = new Point(-1, -1);
             swNoVisor.MouseState = MaterialSkin.MouseState.HOVER;
@@ -836,7 +853,7 @@
             // 
             swInstantADS.Depth = 0;
             swInstantADS.Font = new Font("Segoe UI", 9F);
-            swInstantADS.Location = new Point(381, 46);
+            swInstantADS.Location = new Point(23, 118);
             swInstantADS.Margin = new Padding(0);
             swInstantADS.MouseLocation = new Point(-1, -1);
             swInstantADS.MouseState = MaterialSkin.MouseState.HOVER;
@@ -849,22 +866,22 @@
             swInstantADS.UseVisualStyleBackColor = true;
             swInstantADS.CheckedChanged += swInstantADS_CheckedChanged;
             // 
-            // swNoRecoil
+            // swRecoil
             // 
-            swNoRecoil.Depth = 0;
-            swNoRecoil.Font = new Font("Segoe UI", 9F);
-            swNoRecoil.Location = new Point(15, 45);
-            swNoRecoil.Margin = new Padding(0);
-            swNoRecoil.MouseLocation = new Point(-1, -1);
-            swNoRecoil.MouseState = MaterialSkin.MouseState.HOVER;
-            swNoRecoil.Name = "swNoRecoil";
-            swNoRecoil.Ripple = true;
-            swNoRecoil.Size = new Size(130, 28);
-            swNoRecoil.TabIndex = 1;
-            swNoRecoil.Text = "No Recoil";
-            toolTip.SetToolTip(swNoRecoil, "Removes weapon recoil");
-            swNoRecoil.UseVisualStyleBackColor = true;
-            swNoRecoil.CheckedChanged += swNoRecoil_CheckedChanged;
+            swRecoil.Depth = 0;
+            swRecoil.Font = new Font("Segoe UI", 9F);
+            swRecoil.Location = new Point(23, 41);
+            swRecoil.Margin = new Padding(0);
+            swRecoil.MouseLocation = new Point(-1, -1);
+            swRecoil.MouseState = MaterialSkin.MouseState.HOVER;
+            swRecoil.Name = "swRecoil";
+            swRecoil.Ripple = true;
+            swRecoil.Size = new Size(103, 28);
+            swRecoil.TabIndex = 1;
+            swRecoil.Text = "Recoil";
+            toolTip.SetToolTip(swRecoil, "Removes weapon recoil");
+            swRecoil.UseVisualStyleBackColor = true;
+            swRecoil.CheckedChanged += swRecoil_CheckedChanged;
             // 
             // cboThermalColorScheme
             // 
@@ -2701,8 +2718,9 @@
             // sldrTimeScaleFactor
             // 
             sldrTimeScaleFactor.Depth = 0;
+            sldrTimeScaleFactor.Enabled = false;
             sldrTimeScaleFactor.ForeColor = Color.Black;
-            sldrTimeScaleFactor.Location = new Point(221, 120);
+            sldrTimeScaleFactor.Location = new Point(223, 240);
             sldrTimeScaleFactor.MouseState = MaterialSkin.MouseState.HOVER;
             sldrTimeScaleFactor.Name = "sldrTimeScaleFactor";
             sldrTimeScaleFactor.RangeMax = 19;
@@ -2720,8 +2738,9 @@
             // swTimeScale
             // 
             swTimeScale.Depth = 0;
+            swTimeScale.Enabled = false;
             swTimeScale.Font = new Font("Segoe UI", 9F);
-            swTimeScale.Location = new Point(15, 125);
+            swTimeScale.Location = new Point(17, 245);
             swTimeScale.Margin = new Padding(0);
             swTimeScale.MouseLocation = new Point(-1, -1);
             swTimeScale.MouseState = MaterialSkin.MouseState.HOVER;
@@ -2738,7 +2757,7 @@
             // 
             sldrLootThroughWallsDistance.Depth = 0;
             sldrLootThroughWallsDistance.ForeColor = Color.Black;
-            sldrLootThroughWallsDistance.Location = new Point(221, 160);
+            sldrLootThroughWallsDistance.Location = new Point(223, 80);
             sldrLootThroughWallsDistance.MouseState = MaterialSkin.MouseState.HOVER;
             sldrLootThroughWallsDistance.Name = "sldrLootThroughWallsDistance";
             sldrLootThroughWallsDistance.RangeMax = 4;
@@ -2756,7 +2775,7 @@
             // 
             swLootThroughWalls.Depth = 0;
             swLootThroughWalls.Font = new Font("Segoe UI", 9F);
-            swLootThroughWalls.Location = new Point(15, 165);
+            swLootThroughWalls.Location = new Point(17, 85);
             swLootThroughWalls.Margin = new Padding(0);
             swLootThroughWalls.MouseLocation = new Point(-1, -1);
             swLootThroughWalls.MouseState = MaterialSkin.MouseState.HOVER;
@@ -2773,15 +2792,15 @@
             // 
             swNoWeaponMalfunctions.Depth = 0;
             swNoWeaponMalfunctions.Font = new Font("Segoe UI", 9F);
-            swNoWeaponMalfunctions.Location = new Point(15, 125);
+            swNoWeaponMalfunctions.Location = new Point(201, 195);
             swNoWeaponMalfunctions.Margin = new Padding(0);
             swNoWeaponMalfunctions.MouseLocation = new Point(-1, -1);
             swNoWeaponMalfunctions.MouseState = MaterialSkin.MouseState.HOVER;
             swNoWeaponMalfunctions.Name = "swNoWeaponMalfunctions";
             swNoWeaponMalfunctions.Ripple = true;
-            swNoWeaponMalfunctions.Size = new Size(244, 28);
+            swNoWeaponMalfunctions.Size = new Size(179, 28);
             swNoWeaponMalfunctions.TabIndex = 37;
-            swNoWeaponMalfunctions.Text = "No Weapon Malfunctions";
+            swNoWeaponMalfunctions.Text = "No Malfunctions";
             toolTip.SetToolTip(swNoWeaponMalfunctions, "Removes misfiring, failure to eject/feed, jammed bolts & overheating");
             swNoWeaponMalfunctions.UseVisualStyleBackColor = true;
             swNoWeaponMalfunctions.CheckedChanged += swNoWeaponMalfunctions_CheckedChanged;
@@ -2807,7 +2826,7 @@
             // 
             sldrExtendedReachDistance.Depth = 0;
             sldrExtendedReachDistance.ForeColor = Color.Black;
-            sldrExtendedReachDistance.Location = new Point(221, 200);
+            sldrExtendedReachDistance.Location = new Point(223, 120);
             sldrExtendedReachDistance.MouseState = MaterialSkin.MouseState.HOVER;
             sldrExtendedReachDistance.Name = "sldrExtendedReachDistance";
             sldrExtendedReachDistance.RangeMax = 40;
@@ -3437,7 +3456,7 @@
             // 
             swJuggernaut.Depth = 0;
             swJuggernaut.Font = new Font("Segoe UI", 9F);
-            swJuggernaut.Location = new Point(262, 125);
+            swJuggernaut.Location = new Point(23, 195);
             swJuggernaut.Margin = new Padding(0);
             swJuggernaut.MouseLocation = new Point(-1, -1);
             swJuggernaut.MouseState = MaterialSkin.MouseState.HOVER;
@@ -3471,7 +3490,7 @@
             // 
             swMedPanel.Depth = 0;
             swMedPanel.Font = new Font("Segoe UI", 9F);
-            swMedPanel.Location = new Point(17, 245);
+            swMedPanel.Location = new Point(17, 165);
             swMedPanel.Margin = new Padding(0);
             swMedPanel.MouseLocation = new Point(-1, -1);
             swMedPanel.MouseState = MaterialSkin.MouseState.HOVER;
@@ -3489,7 +3508,7 @@
             sldrFOV.Depth = 0;
             sldrFOV.Enabled = false;
             sldrFOV.ForeColor = Color.Black;
-            sldrFOV.Location = new Point(221, 240);
+            sldrFOV.Location = new Point(223, 162);
             sldrFOV.MouseState = MaterialSkin.MouseState.HOVER;
             sldrFOV.Name = "sldrFOV";
             sldrFOV.RangeMax = 120;
@@ -3625,22 +3644,22 @@
             rdbOnKey.UseVisualStyleBackColor = true;
             rdbOnKey.CheckedChanged += rdbOnKey_CheckedChanged;
             // 
-            // swNoSway
+            // swWeaponSway
             // 
-            swNoSway.Depth = 0;
-            swNoSway.Font = new Font("Segoe UI", 9F);
-            swNoSway.Location = new Point(194, 46);
-            swNoSway.Margin = new Padding(0);
-            swNoSway.MouseLocation = new Point(-1, -1);
-            swNoSway.MouseState = MaterialSkin.MouseState.HOVER;
-            swNoSway.Name = "swNoSway";
-            swNoSway.Ripple = true;
-            swNoSway.Size = new Size(130, 28);
-            swNoSway.TabIndex = 49;
-            swNoSway.Text = "No Sway";
-            toolTip.SetToolTip(swNoSway, "Removes weapon sway");
-            swNoSway.UseVisualStyleBackColor = true;
-            swNoSway.CheckedChanged += swNoSway_CheckedChanged;
+            swWeaponSway.Depth = 0;
+            swWeaponSway.Font = new Font("Segoe UI", 9F);
+            swWeaponSway.Location = new Point(22, 78);
+            swWeaponSway.Margin = new Padding(0);
+            swWeaponSway.MouseLocation = new Point(-1, -1);
+            swWeaponSway.MouseState = MaterialSkin.MouseState.HOVER;
+            swWeaponSway.Name = "swWeaponSway";
+            swWeaponSway.Ripple = true;
+            swWeaponSway.Size = new Size(162, 28);
+            swWeaponSway.TabIndex = 49;
+            swWeaponSway.Text = "Weapon Sway";
+            toolTip.SetToolTip(swWeaponSway, "Removes weapon sway");
+            swWeaponSway.UseVisualStyleBackColor = true;
+            swWeaponSway.CheckedChanged += swWeaponSway_CheckedChanged;
             // 
             // cboHotkeyKey
             // 
@@ -3684,6 +3703,243 @@
             toolTip.SetToolTip(swChamsEvent, "Shows event/temporary AI through walls");
             swChamsEvent.UseVisualStyleBackColor = true;
             swChamsEvent.CheckedChanged += swChamsEvent_CheckedChanged;
+            // 
+            // sldrXFactor
+            // 
+            sldrXFactor.Depth = 0;
+            sldrXFactor.ForeColor = Color.Black;
+            sldrXFactor.Location = new Point(134, 36);
+            sldrXFactor.MouseState = MaterialSkin.MouseState.HOVER;
+            sldrXFactor.Name = "sldrXFactor";
+            sldrXFactor.Size = new Size(185, 40);
+            sldrXFactor.TabIndex = 49;
+            sldrXFactor.Text = "X";
+            toolTip.SetToolTip(sldrXFactor, "% of X recoil");
+            sldrXFactor.UseAccentColor = true;
+            sldrXFactor.ValueMax = 100;
+            sldrXFactor.ValueSuffix = "%";
+            sldrXFactor.onValueChanged += sldrXFactor_onValueChanged;
+            // 
+            // swFrostBite
+            // 
+            swFrostBite.Depth = 0;
+            swFrostBite.Font = new Font("Segoe UI", 9F);
+            swFrostBite.Location = new Point(201, 118);
+            swFrostBite.Margin = new Padding(0);
+            swFrostBite.MouseLocation = new Point(-1, -1);
+            swFrostBite.MouseState = MaterialSkin.MouseState.HOVER;
+            swFrostBite.Name = "swFrostBite";
+            swFrostBite.Ripple = true;
+            swFrostBite.Size = new Size(130, 28);
+            swFrostBite.TabIndex = 50;
+            swFrostBite.Text = "No Frost";
+            toolTip.SetToolTip(swFrostBite, "Removes visual frost bite effect");
+            swFrostBite.UseVisualStyleBackColor = true;
+            swFrostBite.CheckedChanged += swFrostBite_CheckedChanged;
+            // 
+            // sldrSwayFactor
+            // 
+            sldrSwayFactor.Depth = 0;
+            sldrSwayFactor.ForeColor = Color.Black;
+            sldrSwayFactor.Location = new Point(205, 74);
+            sldrSwayFactor.MouseState = MaterialSkin.MouseState.HOVER;
+            sldrSwayFactor.Name = "sldrSwayFactor";
+            sldrSwayFactor.Size = new Size(214, 40);
+            sldrSwayFactor.TabIndex = 51;
+            sldrSwayFactor.Text = "Factor";
+            toolTip.SetToolTip(sldrSwayFactor, "% of weapon sway");
+            sldrSwayFactor.UseAccentColor = true;
+            sldrSwayFactor.ValueMax = 100;
+            sldrSwayFactor.ValueSuffix = "%";
+            sldrSwayFactor.onValueChanged += sldrWeaponSway_onValueChanged;
+            // 
+            // sldrYFactor
+            // 
+            sldrYFactor.Depth = 0;
+            sldrYFactor.ForeColor = Color.Black;
+            sldrYFactor.Location = new Point(333, 36);
+            sldrYFactor.MouseState = MaterialSkin.MouseState.HOVER;
+            sldrYFactor.Name = "sldrYFactor";
+            sldrYFactor.Size = new Size(185, 40);
+            sldrYFactor.TabIndex = 52;
+            sldrYFactor.Text = "Y";
+            toolTip.SetToolTip(sldrYFactor, "% of Y recoil");
+            sldrYFactor.UseAccentColor = true;
+            sldrYFactor.ValueMax = 100;
+            sldrYFactor.ValueSuffix = "%";
+            sldrYFactor.onValueChanged += sldrYFactor_onValueChanged;
+            // 
+            // swNoFog
+            // 
+            swNoFog.Depth = 0;
+            swNoFog.Font = new Font("Segoe UI", 9F);
+            swNoFog.Location = new Point(14, 45);
+            swNoFog.Margin = new Padding(0);
+            swNoFog.MouseLocation = new Point(-1, -1);
+            swNoFog.MouseState = MaterialSkin.MouseState.HOVER;
+            swNoFog.Name = "swNoFog";
+            swNoFog.Ripple = true;
+            swNoFog.Size = new Size(113, 28);
+            swNoFog.TabIndex = 42;
+            swNoFog.Text = "No Fog";
+            toolTip.SetToolTip(swNoFog, "Removes fog effect");
+            swNoFog.UseVisualStyleBackColor = true;
+            swNoFog.CheckedChanged += swNoFog_CheckedChanged;
+            // 
+            // swNoRain
+            // 
+            swNoRain.Depth = 0;
+            swNoRain.Font = new Font("Segoe UI", 9F);
+            swNoRain.Location = new Point(140, 45);
+            swNoRain.Margin = new Padding(0);
+            swNoRain.MouseLocation = new Point(-1, -1);
+            swNoRain.MouseState = MaterialSkin.MouseState.HOVER;
+            swNoRain.Name = "swNoRain";
+            swNoRain.Ripple = true;
+            swNoRain.Size = new Size(113, 28);
+            swNoRain.TabIndex = 43;
+            swNoRain.Text = "No Rain";
+            toolTip.SetToolTip(swNoRain, "Removes rain effects");
+            swNoRain.UseVisualStyleBackColor = true;
+            swNoRain.CheckedChanged += swNoRain_CheckedChanged;
+            // 
+            // swNoClouds
+            // 
+            swNoClouds.Depth = 0;
+            swNoClouds.Font = new Font("Segoe UI", 9F);
+            swNoClouds.Location = new Point(274, 45);
+            swNoClouds.Margin = new Padding(0);
+            swNoClouds.MouseLocation = new Point(-1, -1);
+            swNoClouds.MouseState = MaterialSkin.MouseState.HOVER;
+            swNoClouds.Name = "swNoClouds";
+            swNoClouds.Ripple = true;
+            swNoClouds.Size = new Size(132, 28);
+            swNoClouds.TabIndex = 44;
+            swNoClouds.Text = "No Clouds";
+            toolTip.SetToolTip(swNoClouds, "Minimises amount of clouds");
+            swNoClouds.UseVisualStyleBackColor = true;
+            swNoClouds.CheckedChanged += swNoClouds_CheckedChanged;
+            // 
+            // swNoShadows
+            // 
+            swNoShadows.Depth = 0;
+            swNoShadows.Font = new Font("Segoe UI", 9F);
+            swNoShadows.Location = new Point(14, 86);
+            swNoShadows.Margin = new Padding(0);
+            swNoShadows.MouseLocation = new Point(-1, -1);
+            swNoShadows.MouseState = MaterialSkin.MouseState.HOVER;
+            swNoShadows.Name = "swNoShadows";
+            swNoShadows.Ripple = true;
+            swNoShadows.Size = new Size(150, 28);
+            swNoShadows.TabIndex = 45;
+            swNoShadows.Text = "No Shadows";
+            toolTip.SetToolTip(swNoShadows, "Removes shadows");
+            swNoShadows.UseVisualStyleBackColor = true;
+            swNoShadows.CheckedChanged += swNoShadows_CheckedChanged;
+            // 
+            // swNoSun
+            // 
+            swNoSun.Depth = 0;
+            swNoSun.Font = new Font("Segoe UI", 9F);
+            swNoSun.Location = new Point(179, 86);
+            swNoSun.Margin = new Padding(0);
+            swNoSun.MouseLocation = new Point(-1, -1);
+            swNoSun.MouseState = MaterialSkin.MouseState.HOVER;
+            swNoSun.Name = "swNoSun";
+            swNoSun.Ripple = true;
+            swNoSun.Size = new Size(113, 28);
+            swNoSun.TabIndex = 46;
+            swNoSun.Text = "No Sun";
+            toolTip.SetToolTip(swNoSun, "Removes the sun (also glare)");
+            swNoSun.UseVisualStyleBackColor = true;
+            swNoSun.CheckedChanged += swNoSun_CheckedChanged;
+            // 
+            // swNoMoon
+            // 
+            swNoMoon.Depth = 0;
+            swNoMoon.Font = new Font("Segoe UI", 9F);
+            swNoMoon.Location = new Point(319, 86);
+            swNoMoon.Margin = new Padding(0);
+            swNoMoon.MouseLocation = new Point(-1, -1);
+            swNoMoon.MouseState = MaterialSkin.MouseState.HOVER;
+            swNoMoon.Name = "swNoMoon";
+            swNoMoon.Ripple = true;
+            swNoMoon.Size = new Size(123, 28);
+            swNoMoon.TabIndex = 47;
+            swNoMoon.Text = "No Moon";
+            toolTip.SetToolTip(swNoMoon, "Removes the moon");
+            swNoMoon.UseVisualStyleBackColor = true;
+            swNoMoon.CheckedChanged += swNoMoon_CheckedChanged;
+            // 
+            // swMoonIntensity
+            // 
+            swMoonIntensity.Depth = 0;
+            swMoonIntensity.Font = new Font("Segoe UI", 9F);
+            swMoonIntensity.Location = new Point(15, 165);
+            swMoonIntensity.Margin = new Padding(0);
+            swMoonIntensity.MouseLocation = new Point(-1, -1);
+            swMoonIntensity.MouseState = MaterialSkin.MouseState.HOVER;
+            swMoonIntensity.Name = "swMoonIntensity";
+            swMoonIntensity.Ripple = true;
+            swMoonIntensity.Size = new Size(164, 28);
+            swMoonIntensity.TabIndex = 48;
+            swMoonIntensity.Text = "Moon Intensity";
+            toolTip.SetToolTip(swMoonIntensity, "Changes how intense the moons light is");
+            swMoonIntensity.UseVisualStyleBackColor = true;
+            swMoonIntensity.CheckedChanged += swMoonIntensity_CheckedChanged;
+            // 
+            // sldrMoonIntensity
+            // 
+            sldrMoonIntensity.Depth = 0;
+            sldrMoonIntensity.ForeColor = Color.Black;
+            sldrMoonIntensity.Location = new Point(221, 160);
+            sldrMoonIntensity.MouseState = MaterialSkin.MouseState.HOVER;
+            sldrMoonIntensity.Name = "sldrMoonIntensity";
+            sldrMoonIntensity.RangeMax = 30;
+            sldrMoonIntensity.RangeMin = 1;
+            sldrMoonIntensity.Size = new Size(238, 40);
+            sldrMoonIntensity.TabIndex = 49;
+            sldrMoonIntensity.Text = "";
+            toolTip.SetToolTip(sldrMoonIntensity, "The intensity of the moon light");
+            sldrMoonIntensity.UseAccentColor = true;
+            sldrMoonIntensity.Value = 1;
+            sldrMoonIntensity.ValueMax = 30;
+            sldrMoonIntensity.onValueChanged += sldrMoonIntensity_onValueChanged;
+            // 
+            // swSunIntensity
+            // 
+            swSunIntensity.Depth = 0;
+            swSunIntensity.Font = new Font("Segoe UI", 9F);
+            swSunIntensity.Location = new Point(15, 125);
+            swSunIntensity.Margin = new Padding(0);
+            swSunIntensity.MouseLocation = new Point(-1, -1);
+            swSunIntensity.MouseState = MaterialSkin.MouseState.HOVER;
+            swSunIntensity.Name = "swSunIntensity";
+            swSunIntensity.Ripple = true;
+            swSunIntensity.Size = new Size(152, 28);
+            swSunIntensity.TabIndex = 50;
+            swSunIntensity.Text = "Sun Intensity";
+            toolTip.SetToolTip(swSunIntensity, "Changes how intense the suns light is");
+            swSunIntensity.UseVisualStyleBackColor = true;
+            swSunIntensity.CheckedChanged += swSunIntensity_CheckedChanged;
+            // 
+            // sldrSunIntensity
+            // 
+            sldrSunIntensity.Depth = 0;
+            sldrSunIntensity.ForeColor = Color.Black;
+            sldrSunIntensity.Location = new Point(221, 120);
+            sldrSunIntensity.MouseState = MaterialSkin.MouseState.HOVER;
+            sldrSunIntensity.Name = "sldrSunIntensity";
+            sldrSunIntensity.RangeMax = 30;
+            sldrSunIntensity.RangeMin = 1;
+            sldrSunIntensity.Size = new Size(238, 40);
+            sldrSunIntensity.TabIndex = 51;
+            sldrSunIntensity.Text = "";
+            toolTip.SetToolTip(sldrSunIntensity, "The intensity of the sun light");
+            sldrSunIntensity.UseAccentColor = true;
+            sldrSunIntensity.Value = 1;
+            sldrSunIntensity.ValueMax = 30;
+            sldrSunIntensity.onValueChanged += sldrSunIntensity_onValueChanged;
             // 
             // sldrThermalColorCoefficient
             // 
@@ -3749,7 +4005,7 @@
             tabControlMain.Multiline = true;
             tabControlMain.Name = "tabControlMain";
             tabControlMain.SelectedIndex = 0;
-            tabControlMain.Size = new Size(1400, 746);
+            tabControlMain.Size = new Size(1500, 746);
             tabControlMain.TabIndex = 10;
             tabControlMain.SelectedIndexChanged += TabControl_SelectedIndexChanged;
             // 
@@ -3766,7 +4022,7 @@
             tabRadar.Location = new Point(4, 39);
             tabRadar.Name = "tabRadar";
             tabRadar.Padding = new Padding(3);
-            tabRadar.Size = new Size(1392, 703);
+            tabRadar.Size = new Size(1492, 703);
             tabRadar.TabIndex = 0;
             tabRadar.Text = "Radar";
             // 
@@ -3779,7 +4035,7 @@
             mcRadarLootItemViewer.Controls.Add(btnPingSelectedItem);
             mcRadarLootItemViewer.Depth = 0;
             mcRadarLootItemViewer.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            mcRadarLootItemViewer.Location = new Point(5, 493);
+            mcRadarLootItemViewer.Location = new Point(5, 491);
             mcRadarLootItemViewer.Margin = new Padding(14);
             mcRadarLootItemViewer.MouseState = MaterialSkin.MouseState.HOVER;
             mcRadarLootItemViewer.Name = "mcRadarLootItemViewer";
@@ -3841,7 +4097,7 @@
             mcRadarEnemyStats.Controls.Add(lblRadarPMCs);
             mcRadarEnemyStats.Depth = 0;
             mcRadarEnemyStats.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            mcRadarEnemyStats.Location = new Point(1187, 610);
+            mcRadarEnemyStats.Location = new Point(1287, 610);
             mcRadarEnemyStats.Margin = new Padding(14);
             mcRadarEnemyStats.MouseState = MaterialSkin.MouseState.HOVER;
             mcRadarEnemyStats.Name = "mcRadarEnemyStats";
@@ -4022,7 +4278,7 @@
             mcRadarStats.Controls.Add(lblRadarFPS);
             mcRadarStats.Depth = 0;
             mcRadarStats.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            mcRadarStats.Location = new Point(1286, 623);
+            mcRadarStats.Location = new Point(1386, 623);
             mcRadarStats.Margin = new Padding(14);
             mcRadarStats.MouseState = MaterialSkin.MouseState.HOVER;
             mcRadarStats.Name = "mcRadarStats";
@@ -4169,7 +4425,7 @@
             mcRadarSettings.Controls.Add(btnToggleMapFree);
             mcRadarSettings.Depth = 0;
             mcRadarSettings.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            mcRadarSettings.Location = new Point(1222, 4);
+            mcRadarSettings.Location = new Point(1322, 4);
             mcRadarSettings.Margin = new Padding(14);
             mcRadarSettings.MouseState = MaterialSkin.MouseState.HOVER;
             mcRadarSettings.Name = "mcRadarSettings";
@@ -4218,7 +4474,7 @@
             skMapCanvas.Location = new Point(3, 3);
             skMapCanvas.Margin = new Padding(4, 3, 4, 3);
             skMapCanvas.Name = "skMapCanvas";
-            skMapCanvas.Size = new Size(1386, 697);
+            skMapCanvas.Size = new Size(1486, 697);
             skMapCanvas.TabIndex = 13;
             skMapCanvas.VSync = true;
             skMapCanvas.PaintSurface += skMapCanvas_PaintSurface;
@@ -4235,7 +4491,7 @@
             tabSettings.Location = new Point(4, 39);
             tabSettings.Margin = new Padding(0);
             tabSettings.Name = "tabSettings";
-            tabSettings.Size = new Size(1392, 703);
+            tabSettings.Size = new Size(1492, 703);
             tabSettings.TabIndex = 1;
             tabSettings.Text = "Settings";
             // 
@@ -4250,14 +4506,14 @@
             tabSelector.Margin = new Padding(0);
             tabSelector.MouseState = MaterialSkin.MouseState.HOVER;
             tabSelector.Name = "tabSelector";
-            tabSelector.Size = new Size(1392, 36);
+            tabSelector.Size = new Size(1492, 36);
             tabSelector.TabIndex = 29;
             tabSelector.TabIndicatorHeight = 1;
             tabSelector.Text = "tabSelectorSettings";
             // 
             // tabControlSettings
             // 
-            tabControlSettings.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            tabControlSettings.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControlSettings.Controls.Add(tabSettingsGeneral);
             tabControlSettings.Controls.Add(tabSettingsHotkeys);
             tabControlSettings.Controls.Add(tabSettingsMemoryWriting);
@@ -4266,13 +4522,12 @@
             tabControlSettings.Controls.Add(tabSettingsColors);
             tabControlSettings.Depth = 0;
             tabControlSettings.Font = new Font("Segoe UI", 9F);
-            tabControlSettings.Location = new Point(0, 36);
-            tabControlSettings.Margin = new Padding(0);
+            tabControlSettings.Location = new Point(0, 35);
             tabControlSettings.MouseState = MaterialSkin.MouseState.HOVER;
             tabControlSettings.Multiline = true;
             tabControlSettings.Name = "tabControlSettings";
             tabControlSettings.SelectedIndex = 0;
-            tabControlSettings.Size = new Size(1392, 668);
+            tabControlSettings.Size = new Size(1492, 668);
             tabControlSettings.TabIndex = 28;
             // 
             // tabSettingsGeneral
@@ -4285,7 +4540,7 @@
             tabSettingsGeneral.Location = new Point(4, 24);
             tabSettingsGeneral.Margin = new Padding(0);
             tabSettingsGeneral.Name = "tabSettingsGeneral";
-            tabSettingsGeneral.Size = new Size(1384, 640);
+            tabSettingsGeneral.Size = new Size(1484, 640);
             tabSettingsGeneral.TabIndex = 0;
             tabSettingsGeneral.Text = "General";
             // 
@@ -4437,7 +4692,7 @@
             tabSettingsHotkeys.Location = new Point(4, 24);
             tabSettingsHotkeys.Name = "tabSettingsHotkeys";
             tabSettingsHotkeys.Padding = new Padding(3);
-            tabSettingsHotkeys.Size = new Size(1384, 640);
+            tabSettingsHotkeys.Size = new Size(1484, 640);
             tabSettingsHotkeys.TabIndex = 5;
             tabSettingsHotkeys.Text = "Hotkeys";
             tabSettingsHotkeys.UseVisualStyleBackColor = true;
@@ -4516,6 +4771,7 @@
             // tabSettingsMemoryWriting
             // 
             tabSettingsMemoryWriting.BackColor = Color.White;
+            tabSettingsMemoryWriting.Controls.Add(mcSettingsMemoryWritingWorld);
             tabSettingsMemoryWriting.Controls.Add(mcSettingsMemoryWritingChams);
             tabSettingsMemoryWriting.Controls.Add(mcSettingsMemoryWritingSkillBuffs);
             tabSettingsMemoryWriting.Controls.Add(mcSettingsMemoryWritingThermal);
@@ -4525,9 +4781,65 @@
             tabSettingsMemoryWriting.Location = new Point(4, 24);
             tabSettingsMemoryWriting.Name = "tabSettingsMemoryWriting";
             tabSettingsMemoryWriting.Padding = new Padding(3);
-            tabSettingsMemoryWriting.Size = new Size(1384, 640);
+            tabSettingsMemoryWriting.Size = new Size(1484, 640);
             tabSettingsMemoryWriting.TabIndex = 1;
             tabSettingsMemoryWriting.Text = "Memory Writing";
+            // 
+            // mcSettingsMemoryWritingWorld
+            // 
+            mcSettingsMemoryWritingWorld.BackColor = Color.FromArgb(255, 255, 255);
+            mcSettingsMemoryWritingWorld.Controls.Add(swSunIntensity);
+            mcSettingsMemoryWritingWorld.Controls.Add(sldrSunIntensity);
+            mcSettingsMemoryWritingWorld.Controls.Add(swMoonIntensity);
+            mcSettingsMemoryWritingWorld.Controls.Add(sldrMoonIntensity);
+            mcSettingsMemoryWritingWorld.Controls.Add(swNoMoon);
+            mcSettingsMemoryWritingWorld.Controls.Add(swNoSun);
+            mcSettingsMemoryWritingWorld.Controls.Add(swNoShadows);
+            mcSettingsMemoryWritingWorld.Controls.Add(swNoClouds);
+            mcSettingsMemoryWritingWorld.Controls.Add(swNoRain);
+            mcSettingsMemoryWritingWorld.Controls.Add(swNoFog);
+            mcSettingsMemoryWritingWorld.Controls.Add(lblSettingsMemoryWritingWorld);
+            mcSettingsMemoryWritingWorld.Controls.Add(swFreezeTime);
+            mcSettingsMemoryWritingWorld.Controls.Add(sldrTimeOfDay);
+            mcSettingsMemoryWritingWorld.Controls.Add(swTimeScale);
+            mcSettingsMemoryWritingWorld.Controls.Add(sldrTimeScaleFactor);
+            mcSettingsMemoryWritingWorld.Controls.Add(lblSettingsMemoryWritingTimeScaleFactor);
+            mcSettingsMemoryWritingWorld.Depth = 0;
+            mcSettingsMemoryWritingWorld.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            mcSettingsMemoryWritingWorld.Location = new Point(1108, 56);
+            mcSettingsMemoryWritingWorld.Margin = new Padding(14);
+            mcSettingsMemoryWritingWorld.MouseState = MaterialSkin.MouseState.HOVER;
+            mcSettingsMemoryWritingWorld.Name = "mcSettingsMemoryWritingWorld";
+            mcSettingsMemoryWritingWorld.Padding = new Padding(14);
+            mcSettingsMemoryWritingWorld.Size = new Size(476, 288);
+            mcSettingsMemoryWritingWorld.TabIndex = 44;
+            // 
+            // lblSettingsMemoryWritingWorld
+            // 
+            lblSettingsMemoryWritingWorld.AutoSize = true;
+            lblSettingsMemoryWritingWorld.Depth = 0;
+            lblSettingsMemoryWritingWorld.Font = new Font("Roboto Medium", 20F, FontStyle.Bold, GraphicsUnit.Pixel);
+            lblSettingsMemoryWritingWorld.FontType = MaterialSkin.MaterialSkinManager.fontType.H6;
+            lblSettingsMemoryWritingWorld.HighEmphasis = true;
+            lblSettingsMemoryWritingWorld.Location = new Point(17, 12);
+            lblSettingsMemoryWritingWorld.MouseState = MaterialSkin.MouseState.HOVER;
+            lblSettingsMemoryWritingWorld.Name = "lblSettingsMemoryWritingWorld";
+            lblSettingsMemoryWritingWorld.Size = new Size(53, 24);
+            lblSettingsMemoryWritingWorld.TabIndex = 33;
+            lblSettingsMemoryWritingWorld.Text = "World";
+            lblSettingsMemoryWritingWorld.UseAccent = true;
+            // 
+            // lblSettingsMemoryWritingTimeScaleFactor
+            // 
+            lblSettingsMemoryWritingTimeScaleFactor.AutoSize = true;
+            lblSettingsMemoryWritingTimeScaleFactor.Depth = 0;
+            lblSettingsMemoryWritingTimeScaleFactor.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lblSettingsMemoryWritingTimeScaleFactor.Location = new Point(444, 255);
+            lblSettingsMemoryWritingTimeScaleFactor.MouseState = MaterialSkin.MouseState.HOVER;
+            lblSettingsMemoryWritingTimeScaleFactor.Name = "lblSettingsMemoryWritingTimeScaleFactor";
+            lblSettingsMemoryWritingTimeScaleFactor.Size = new Size(18, 19);
+            lblSettingsMemoryWritingTimeScaleFactor.TabIndex = 41;
+            lblSettingsMemoryWritingTimeScaleFactor.Text = "x1";
             // 
             // mcSettingsMemoryWritingChams
             // 
@@ -4628,7 +4940,7 @@
             mcSettingsMemoryWritingThermal.Controls.Add(sldrThermalRampShift);
             mcSettingsMemoryWritingThermal.Depth = 0;
             mcSettingsMemoryWritingThermal.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            mcSettingsMemoryWritingThermal.Location = new Point(14, 545);
+            mcSettingsMemoryWritingThermal.Location = new Point(15, 529);
             mcSettingsMemoryWritingThermal.Margin = new Padding(14);
             mcSettingsMemoryWritingThermal.MouseState = MaterialSkin.MouseState.HOVER;
             mcSettingsMemoryWritingThermal.Name = "mcSettingsMemoryWritingThermal";
@@ -4663,14 +4975,9 @@
             mcSettingsMemoryWritingGlobal.Controls.Add(sldrExtendedReachDistance);
             mcSettingsMemoryWritingGlobal.Controls.Add(sldrLootThroughWallsDistance);
             mcSettingsMemoryWritingGlobal.Controls.Add(swLootThroughWalls);
-            mcSettingsMemoryWritingGlobal.Controls.Add(lblSettingsMemoryWritingTimeScaleFactor);
-            mcSettingsMemoryWritingGlobal.Controls.Add(sldrTimeScaleFactor);
-            mcSettingsMemoryWritingGlobal.Controls.Add(swTimeScale);
             mcSettingsMemoryWritingGlobal.Controls.Add(swInfiniteStamina);
             mcSettingsMemoryWritingGlobal.Controls.Add(lblSettingsMemoryWritingGlobal);
-            mcSettingsMemoryWritingGlobal.Controls.Add(sldrTimeOfDay);
             mcSettingsMemoryWritingGlobal.Controls.Add(swExtendedReach);
-            mcSettingsMemoryWritingGlobal.Controls.Add(swFreezeTime);
             mcSettingsMemoryWritingGlobal.Depth = 0;
             mcSettingsMemoryWritingGlobal.ForeColor = Color.FromArgb(222, 0, 0, 0);
             mcSettingsMemoryWritingGlobal.Location = new Point(15, 56);
@@ -4678,7 +4985,7 @@
             mcSettingsMemoryWritingGlobal.MouseState = MaterialSkin.MouseState.HOVER;
             mcSettingsMemoryWritingGlobal.Name = "mcSettingsMemoryWritingGlobal";
             mcSettingsMemoryWritingGlobal.Padding = new Padding(14);
-            mcSettingsMemoryWritingGlobal.Size = new Size(535, 288);
+            mcSettingsMemoryWritingGlobal.Size = new Size(535, 212);
             mcSettingsMemoryWritingGlobal.TabIndex = 38;
             // 
             // lblSettingsMemoryWritingLootThroughWallsDistance
@@ -4686,7 +4993,7 @@
             lblSettingsMemoryWritingLootThroughWallsDistance.AutoSize = true;
             lblSettingsMemoryWritingLootThroughWallsDistance.Depth = 0;
             lblSettingsMemoryWritingLootThroughWallsDistance.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lblSettingsMemoryWritingLootThroughWallsDistance.Location = new Point(446, 170);
+            lblSettingsMemoryWritingLootThroughWallsDistance.Location = new Point(448, 90);
             lblSettingsMemoryWritingLootThroughWallsDistance.MouseState = MaterialSkin.MouseState.HOVER;
             lblSettingsMemoryWritingLootThroughWallsDistance.Name = "lblSettingsMemoryWritingLootThroughWallsDistance";
             lblSettingsMemoryWritingLootThroughWallsDistance.Size = new Size(18, 19);
@@ -4698,24 +5005,12 @@
             lblSettingsMemoryWritingExtendedReachDistance.AutoSize = true;
             lblSettingsMemoryWritingExtendedReachDistance.Depth = 0;
             lblSettingsMemoryWritingExtendedReachDistance.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lblSettingsMemoryWritingExtendedReachDistance.Location = new Point(446, 210);
+            lblSettingsMemoryWritingExtendedReachDistance.Location = new Point(448, 130);
             lblSettingsMemoryWritingExtendedReachDistance.MouseState = MaterialSkin.MouseState.HOVER;
             lblSettingsMemoryWritingExtendedReachDistance.Name = "lblSettingsMemoryWritingExtendedReachDistance";
             lblSettingsMemoryWritingExtendedReachDistance.Size = new Size(18, 19);
             lblSettingsMemoryWritingExtendedReachDistance.TabIndex = 45;
             lblSettingsMemoryWritingExtendedReachDistance.Text = "x4";
-            // 
-            // lblSettingsMemoryWritingTimeScaleFactor
-            // 
-            lblSettingsMemoryWritingTimeScaleFactor.AutoSize = true;
-            lblSettingsMemoryWritingTimeScaleFactor.Depth = 0;
-            lblSettingsMemoryWritingTimeScaleFactor.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lblSettingsMemoryWritingTimeScaleFactor.Location = new Point(446, 134);
-            lblSettingsMemoryWritingTimeScaleFactor.MouseState = MaterialSkin.MouseState.HOVER;
-            lblSettingsMemoryWritingTimeScaleFactor.Name = "lblSettingsMemoryWritingTimeScaleFactor";
-            lblSettingsMemoryWritingTimeScaleFactor.Size = new Size(18, 19);
-            lblSettingsMemoryWritingTimeScaleFactor.TabIndex = 41;
-            lblSettingsMemoryWritingTimeScaleFactor.Text = "x1";
             // 
             // lblSettingsMemoryWritingGlobal
             // 
@@ -4735,24 +5030,28 @@
             // mcSettingsMemoryWritingGear
             // 
             mcSettingsMemoryWritingGear.BackColor = Color.FromArgb(255, 255, 255);
-            mcSettingsMemoryWritingGear.Controls.Add(swNoSway);
+            mcSettingsMemoryWritingGear.Controls.Add(sldrYFactor);
+            mcSettingsMemoryWritingGear.Controls.Add(swWeaponSway);
+            mcSettingsMemoryWritingGear.Controls.Add(sldrSwayFactor);
+            mcSettingsMemoryWritingGear.Controls.Add(swFrostBite);
+            mcSettingsMemoryWritingGear.Controls.Add(sldrXFactor);
             mcSettingsMemoryWritingGear.Controls.Add(swNoWeaponMalfunctions);
             mcSettingsMemoryWritingGear.Controls.Add(swNightVision);
             mcSettingsMemoryWritingGear.Controls.Add(swJuggernaut);
             mcSettingsMemoryWritingGear.Controls.Add(swOpticalThermal);
+            mcSettingsMemoryWritingGear.Controls.Add(swRecoil);
             mcSettingsMemoryWritingGear.Controls.Add(swThermalVision);
             mcSettingsMemoryWritingGear.Controls.Add(lblSettingsMemoryWritingGear);
             mcSettingsMemoryWritingGear.Controls.Add(swNoVisor);
             mcSettingsMemoryWritingGear.Controls.Add(swInstantADS);
-            mcSettingsMemoryWritingGear.Controls.Add(swNoRecoil);
             mcSettingsMemoryWritingGear.Depth = 0;
             mcSettingsMemoryWritingGear.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            mcSettingsMemoryWritingGear.Location = new Point(14, 360);
+            mcSettingsMemoryWritingGear.Location = new Point(15, 280);
             mcSettingsMemoryWritingGear.Margin = new Padding(14);
             mcSettingsMemoryWritingGear.MouseState = MaterialSkin.MouseState.HOVER;
             mcSettingsMemoryWritingGear.Name = "mcSettingsMemoryWritingGear";
             mcSettingsMemoryWritingGear.Padding = new Padding(14);
-            mcSettingsMemoryWritingGear.Size = new Size(535, 170);
+            mcSettingsMemoryWritingGear.Size = new Size(535, 237);
             mcSettingsMemoryWritingGear.TabIndex = 39;
             // 
             // lblSettingsMemoryWritingGear
@@ -4780,7 +5079,7 @@
             tabSettingsLoot.Location = new Point(4, 24);
             tabSettingsLoot.Margin = new Padding(0);
             tabSettingsLoot.Name = "tabSettingsLoot";
-            tabSettingsLoot.Size = new Size(1384, 640);
+            tabSettingsLoot.Size = new Size(1484, 640);
             tabSettingsLoot.TabIndex = 2;
             tabSettingsLoot.Text = "Loot/Quests";
             // 
@@ -4951,7 +5250,7 @@
             tabSettingsAIFactions.Location = new Point(4, 24);
             tabSettingsAIFactions.Margin = new Padding(0);
             tabSettingsAIFactions.Name = "tabSettingsAIFactions";
-            tabSettingsAIFactions.Size = new Size(1384, 640);
+            tabSettingsAIFactions.Size = new Size(1484, 640);
             tabSettingsAIFactions.TabIndex = 3;
             tabSettingsAIFactions.Text = "AI Factions";
             // 
@@ -5088,7 +5387,7 @@
             tabSettingsColors.Location = new Point(4, 24);
             tabSettingsColors.Margin = new Padding(0);
             tabSettingsColors.Name = "tabSettingsColors";
-            tabSettingsColors.Size = new Size(1384, 640);
+            tabSettingsColors.Size = new Size(1484, 640);
             tabSettingsColors.TabIndex = 4;
             tabSettingsColors.Text = "Colors";
             // 
@@ -6345,7 +6644,7 @@
             tabPlayerLoadouts.ImageKey = "loadouts.png";
             tabPlayerLoadouts.Location = new Point(4, 39);
             tabPlayerLoadouts.Name = "tabPlayerLoadouts";
-            tabPlayerLoadouts.Size = new Size(1392, 703);
+            tabPlayerLoadouts.Size = new Size(1492, 703);
             tabPlayerLoadouts.TabIndex = 2;
             tabPlayerLoadouts.Text = "Player Loadouts";
             // 
@@ -6491,7 +6790,7 @@
             tabWatchlist.ImageKey = "watchlist.png";
             tabWatchlist.Location = new Point(4, 39);
             tabWatchlist.Name = "tabWatchlist";
-            tabWatchlist.Size = new Size(1392, 703);
+            tabWatchlist.Size = new Size(1492, 703);
             tabWatchlist.TabIndex = 3;
             tabWatchlist.Text = "Watchlist";
             // 
@@ -6693,7 +6992,7 @@
             tabLootFilter.ImageKey = "loot.png";
             tabLootFilter.Location = new Point(4, 39);
             tabLootFilter.Name = "tabLootFilter";
-            tabLootFilter.Size = new Size(1392, 703);
+            tabLootFilter.Size = new Size(1492, 703);
             tabLootFilter.TabIndex = 4;
             tabLootFilter.Text = "Loot Filter";
             // 
@@ -6906,7 +7205,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1400, 770);
+            ClientSize = new Size(1500, 770);
             Controls.Add(tabControlMain);
             DrawerShowIconsWhenHidden = true;
             DrawerTabControl = tabControlMain;
@@ -6915,6 +7214,7 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "frmMain";
             Padding = new Padding(0, 24, 0, 0);
+            Load += frmMain_Load;
             Shown += frmMain_Shown;
             tabControlMain.ResumeLayout(false);
             tabRadar.ResumeLayout(false);
@@ -6939,6 +7239,8 @@
             mcSettingsHotkeys.ResumeLayout(false);
             mcSettingsHotkeys.PerformLayout();
             tabSettingsMemoryWriting.ResumeLayout(false);
+            mcSettingsMemoryWritingWorld.ResumeLayout(false);
+            mcSettingsMemoryWritingWorld.PerformLayout();
             mcSettingsMemoryWritingChams.ResumeLayout(false);
             mcSettingsMemoryWritingChams.PerformLayout();
             mcSettingsMemoryWritingSkillBuffs.ResumeLayout(false);
@@ -7092,7 +7394,7 @@
         private MaterialSkin.Controls.MaterialSlider sldrMagDrillsSpeed;
         private MaterialSkin.Controls.MaterialSwitch swNoVisor;
         private MaterialSkin.Controls.MaterialSwitch swInstantADS;
-        private MaterialSkin.Controls.MaterialSwitch swNoRecoil;
+        private MaterialSkin.Controls.MaterialSwitch swRecoil;
         private MaterialSkin.Controls.MaterialCard mcSettingsMemoryWritingSkillBuffs;
         private MaterialSkin.Controls.MaterialLabel lblSettingsMemoryWritingSkills;
         private MaterialSkin.Controls.MaterialCard mcSettingsLootMinRubleValue;
@@ -7418,7 +7720,7 @@
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
         private MaterialSkin.Controls.MaterialRadioButton rdbToggleKey;
         private MaterialSkin.Controls.MaterialRadioButton rdbOnKey;
-        private MaterialSkin.Controls.MaterialSwitch swNoSway;
+        private MaterialSkin.Controls.MaterialSwitch swWeaponSway;
         private MaterialSkin.Controls.MaterialComboBox cboHotkeyKey;
         private PictureBox picTransitIcon;
         private MaterialSkin.Controls.MaterialLabel lblSettingsColorsTransitIcon;
@@ -7429,6 +7731,25 @@
         private MaterialSkin.Controls.MaterialSwitch swChamsEvent;
         private MaterialSkin.Controls.MaterialLabel lblRadarOtherValue;
         private MaterialSkin.Controls.MaterialLabel lblRadarOther;
+        private MaterialSkin.Controls.MaterialSlider sldrXFactor;
+        private MaterialSkin.Controls.MaterialSlider sldrSwayFactor;
+        private MaterialSkin.Controls.MaterialSwitch swFrostBite;
+        private MaterialSkin.Controls.MaterialSlider sldrYFactor;
+        private MaterialSkin.Controls.MaterialCard mcSettingsMemoryWritingWorld;
+        private MaterialSkin.Controls.MaterialLabel materialLabel2;
+        private MaterialSkin.Controls.MaterialLabel materialLabel3;
+        private MaterialSkin.Controls.MaterialLabel materialLabel4;
+        private MaterialSkin.Controls.MaterialLabel lblSettingsMemoryWritingWorld;
+        private MaterialSkin.Controls.MaterialSwitch swMoonIntensity;
+        private MaterialSkin.Controls.MaterialSlider sldrMoonIntensity;
+        private MaterialSkin.Controls.MaterialSwitch swNoMoon;
+        private MaterialSkin.Controls.MaterialSwitch swNoSun;
+        private MaterialSkin.Controls.MaterialSwitch swNoShadows;
+        private MaterialSkin.Controls.MaterialSwitch swNoClouds;
+        private MaterialSkin.Controls.MaterialSwitch swNoRain;
+        private MaterialSkin.Controls.MaterialSwitch swNoFog;
+        private MaterialSkin.Controls.MaterialSwitch swSunIntensity;
+        private MaterialSkin.Controls.MaterialSlider sldrSunIntensity;
     }
 }
 

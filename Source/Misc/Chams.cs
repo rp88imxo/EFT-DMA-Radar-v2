@@ -145,18 +145,14 @@ namespace eft_dma_radar
             if (Memory.IsExtracting)
                 return false;
 
-            // temp
-            //if (player.Name != "Tagilla")
-            //    return false;
-
             try
             {
                 var BodySkins = Memory.ReadPtr(player.PlayerBody + 0x48);
                 var BodySkinEntries = Memory.ReadPtr(BodySkins + 0x18);
                 var bodySkinsCount = Memory.ReadValue<int>(BodySkins + 0x40);
 
-                //if (bodySkinsCount < 1)
-                //    return false;
+                if (bodySkinsCount < 1)
+                    return false;
 
                 for (int i = 0; i < bodySkinsCount; i++)
                 {
@@ -166,12 +162,8 @@ namespace eft_dma_radar
                         var lodsArray = Memory.ReadPtr(bodySkin + 0x20);
                         var lodsCount = Memory.ReadValue<int>(lodsArray + 0x18);
 
-                        //if (lodsCount < 1)
-                        //    continue;
-
-                        // temporary
-                        //if (i != 1)
-                        //    continue;
+                        if (lodsCount < 1)
+                            continue;
 
                         for (int j = 0; j < lodsCount; j++)
                         {
@@ -191,7 +183,8 @@ namespace eft_dma_radar
                                     {
                                         skinnedMeshRender = Memory.ReadPtr(skinnedMeshRender + 0x28);
                                     }
-                                    catch {
+                                    catch
+                                    {
                                         continue;
                                     }
                                 }
@@ -199,7 +192,7 @@ namespace eft_dma_radar
                                 var materialDictionary = Memory.ReadPtr(skinnedMeshRender + 0x10);
                                 var materialCount = Memory.ReadValue<int>(materialDictionary + 0x158);
 
-                                if (materialCount < 1 && materialCount > 5)
+                                if (materialCount < 1 || materialCount > 5)
                                     continue;
 
                                 var materialDictionaryBase = Memory.ReadPtr(materialDictionary + 0x148);
@@ -223,7 +216,7 @@ namespace eft_dma_radar
                                             else
                                                 this.SavePointer(materialDictionaryBase + (sizeof(uint) * (uint)k), materialPtr, player);
 
-                                            entries.Add(new ScatterWriteDataEntry<ulong>(materialDictionaryBase + (0x4 * (uint)k), material));
+                                            entries.Add(new ScatterWriteDataEntry<uint>(materialDictionaryBase + (0x4 * (uint)k), (uint)material));
                                             setAnyMaterial = true;
                                         }
                                     }
@@ -426,7 +419,7 @@ namespace eft_dma_radar
                 foreach (var backup in pointerBackup)
                 {
                     if (this.safeToWriteChams)
-                        entries.Add(new ScatterWriteDataEntry<ulong>(backup.Address, backup.OriginalValue));
+                        entries.Add(new ScatterWriteDataEntry<uint>(backup.Address, (uint)backup.OriginalValue));
                 };
             }
 
@@ -445,7 +438,7 @@ namespace eft_dma_radar
                 foreach (var backup in pointerBackup)
                 {
                     if (this.safeToWriteChams)
-                        entries.Add(new ScatterWriteDataEntry<ulong>(backup.Address, backup.OriginalValue));
+                        entries.Add(new ScatterWriteDataEntry<uint>(backup.Address, (uint)backup.OriginalValue));
                 }
             }
 
@@ -467,7 +460,7 @@ namespace eft_dma_radar
             foreach (var pointerBackup in this.pointerBackups[key])
             {
                 if (this.safeToWriteChams && player.IsActive)
-                    entries.Add(new ScatterWriteDataEntry<ulong>(pointerBackup.Address, pointerBackup.OriginalValue));
+                    entries.Add(new ScatterWriteDataEntry<uint>(pointerBackup.Address, (uint)pointerBackup.OriginalValue));
             };
 
             if (entries.Any())
