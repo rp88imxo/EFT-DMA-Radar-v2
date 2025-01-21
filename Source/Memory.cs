@@ -176,6 +176,11 @@ namespace eft_dma_radar
                 return game.Players.FirstOrDefault((KeyValuePair<string, Player> x) => x.Value.Type == PlayerType.LocalPlayer).Value;
             }
         }
+
+        public static ulong TarkovBase
+        {
+            get => _unityBase;
+        }
         #endregion
 
         #region Startup
@@ -301,11 +306,6 @@ namespace eft_dma_radar
                     throw new DMAException("Unable to obtain Base Module Address. Game may not be running");
                 else
                 {
-                    try
-                    {
-                        MonoSharp.InitializeFunctions();
-                    }
-                    catch { }
                     Program.Log($"Found UnityPlayer.dll at 0x{_unityBase.ToString("x")}");
                     return true;
                 }
@@ -764,6 +764,11 @@ namespace eft_dma_radar
         private static void ThrowIfDMAShutdown()
         {
             if (!_running) throw new DMAShutdown("Memory Thread/DMA is shutting down!");
+        }
+
+        public static bool IsValidPtr(ulong address)
+        {
+            return address != 0 && Memory.TarkovBase + address >= Memory.TarkovBase && address <= 0x7FFFFFFEFFFF;
         }
 
 
